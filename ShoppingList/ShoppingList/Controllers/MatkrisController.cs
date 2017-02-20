@@ -23,7 +23,7 @@ namespace ShoppingList.Controllers
         }
 
         [HttpPost]
-        public ActionResult ValidateFileUpload()
+        public ActionResult Upload(string namn)
         {
             if (Request.Files.Count > 0)
             {
@@ -39,21 +39,17 @@ namespace ShoppingList.Controllers
                         string line;
                         while ((line = reader.ReadLine()) != null)
                         {
-                            if(lines.Count > 0)
+                            if (lines.Count > 0)
+                            {
                                 lines.Add(line);
-                            Debug.WriteLine(line);
+                                Debug.WriteLine(line);
+                            }
                         }
-                        return Json(new
-                        { Response = "Din produktlista är godkänd, uppdatering av valda produkter sker automatiskt.", Success = true }
-                        );
                     }
-                    //hello
                 }
+                return View("~/Views/Matkris/Upload.cshtml", null, "Allting gick bra");
             }
-            return Json(new
-            { Response = "Ett fel har inträffat. Vänligen se över exempelfilen innan uppladdning", Success = false }
-            );
-            //hello
+            return View("~/Views/Matkris/Upload.cshtml", null, "Allting gick dåligt");
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿
+﻿@model String
+
 @{
     Layout = null;
 }
@@ -15,13 +16,17 @@
 </head>
 <body>
     <div class="container">
-        @using (Html.BeginForm("ValidateFileUpload", "Matkris", FormMethod.Post, new { enctype = "multipart/form-data"}))
+        @using (Html.BeginForm("Upload", "Matkris", FormMethod.Post, new { enctype = "multipart/form-data", @id = "UploadFormSubmit" }))
         {
             <div class="form-group">
-                <input class="form-control" type="file" name="file"/>
-                <input disabled="disabled" class="form-control" type="submit" value="Ladda upp" name="submit"/>
+                <input class="form-control" type="file" name="browseFile" />
+                <input class="form-control" type="submit" value="Ladda upp" name="submitFile" />
             </div>
         }
+        @*}*@
+    </div>
+    <div id="responseMessage">
+        <p>@Model</p>
     </div>
 </body>
 </html>
