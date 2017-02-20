@@ -39,7 +39,8 @@ namespace ShoppingList.Controllers
                         string line;
                         while ((line = reader.ReadLine()) != null)
                         {
-                            lines.Add(line);
+                            if(lines.Count > 0)
+                                lines.Add(line);
                             Debug.WriteLine(line);
                         }
                     }
