@@ -16,19 +16,6 @@
     <title>Upload</title>
 </head>
 <body>
-    @*<div class="container">
-            @using (Html.BeginForm("Upload", "Matkris", FormMethod.Post, new { enctype = "multipart/form-data", @id = "UploadFormSubmit" }))
-            {
-                <div class="form-group">
-                    <input class="form-control" type="file" name="browseFile" />
-                    <input class="form-control" type="submit" value="Ladda upp" name="submitFile" />
-                </div>
-            }
-        </div>
-        <div id="responseMessage">
-            <p>@Model</p>
-        </div>*@
-
     <div class="container">
         @using (Html.BeginForm("Upload", "Matkris", FormMethod.Post, new { enctype = "multipart/form-data" }))
         {
@@ -49,8 +36,6 @@
     </div>
     <script>
         $(function () {
-
-            // We can attach the `fileselect` event to all file inputs on the page
             $(document).on('change', ':file', function () {
                 var input = $(this),
                     label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
@@ -63,7 +48,6 @@
                 }
             });
 
-            // We can watch for our custom `fileselect` event like this
             $(document).ready(function () {
                 $(':file').on('fileselect', function (event, label) {
 
