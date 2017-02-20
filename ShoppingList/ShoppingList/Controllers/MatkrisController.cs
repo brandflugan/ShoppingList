@@ -43,11 +43,16 @@ namespace ShoppingList.Controllers
                                 lines.Add(line);
                             Debug.WriteLine(line);
                         }
+                        return Json(new
+                        { Response = "Din produktlista är godkänd, uppdatering av valda produkter sker automatiskt.", Success = true }
+                        );
                     }
                     //hello
                 }
             }
-            return null;
+            return Json(new
+            { Response = "Ett fel har inträffat. Vänligen se över exempelfilen innan uppladdning", Success = false }
+            );
             //hello
         }
     }
