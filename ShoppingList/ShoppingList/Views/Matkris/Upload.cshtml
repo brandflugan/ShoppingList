@@ -8,14 +8,19 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
+    <script src="~/Scripts/jquery-3.1.1.min.js" type="text/javascript"></script>
+    <link rel="stylesheet" href="~/Content/bootstrap.min.css" type="text/css" />
+    <script src="~/Scripts/bootstrap.min.js" type="text/javascript"></script>
     <title>Upload</title>
 </head>
 <body>
-    <div>
-        @using (Html.BeginForm("ValidateFileUpload", "Matkris", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    <div class="container">
+        @using (Html.BeginForm("ValidateFileUpload", "Matkris", FormMethod.Post, new { enctype = "multipart/form-data"}))
         {
-            <input type="file" name="file"/>
-            <input type="submit" value="Ladda upp" name="submit"/>
+            <div class="form-group">
+                <input class="form-control" type="file" name="file"/>
+                <input disabled="disabled" class="form-control" type="submit" value="Ladda upp" name="submit"/>
+            </div>
         }
     </div>
 </body>
