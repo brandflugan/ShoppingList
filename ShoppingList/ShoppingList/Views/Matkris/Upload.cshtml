@@ -12,21 +12,62 @@
     <script src="~/Scripts/jquery-3.1.1.min.js" type="text/javascript"></script>
     <link rel="stylesheet" href="~/Content/bootstrap.min.css" type="text/css" />
     <script src="~/Scripts/bootstrap.min.js" type="text/javascript"></script>
+    <link rel="stylesheet" href="~/Content/css/main.css" type="text/css" />
     <title>Upload</title>
 </head>
 <body>
+
     <div class="container">
-        @using (Html.BeginForm("Upload", "Matkris", FormMethod.Post, new { enctype = "multipart/form-data", @id = "UploadFormSubmit" }))
+        @using (Html.BeginForm("Upload", "Matkris", FormMethod.Post, new { enctype = "multipart/form-data" }))
         {
-            <div class="form-group">
-                <input class="form-control" type="file" name="browseFile" />
+            @*<div class="form-group">
+                <label class="btn btn-default btn-file">
+                    Välj fil: <input class="form-control" type="file" name="browseFile" display="none" />
+                </label>
                 <input class="form-control" type="submit" value="Ladda upp" name="submitFile" />
+            </div>*@
+            <div class="input-group">
+                <label class="input-group-btn">
+                    <span class="btn btn-primary">
+                        Välj fil: <input type="file" style="display: none;">
+                    </span>
+                </label>
+                <input input class="form-control" name="browseFile" readonly disabled="disabled">
             </div>
+            <input class="form-control" type="submit" value="Ladda upp" name="submitFile" />
         }
-        @*}*@
-    </div>
+
     <div id="responseMessage">
         <p>@Model</p>
     </div>
+
+        <script>
+            $(function () {
+
+                // We can attach the `fileselect` event to all file inputs on the page
+                $(document).on('change', ':file', function () {
+                    var input = $(this),
+                        label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
+                    input.trigger('fileselect', label);
+                });
+
+                // We can watch for our custom `fileselect` event like this
+                $(document).ready(function () {
+                    $(':file').on('fileselect', function (event, label) {
+
+                        var input = $(this).parents('.input-group').find(':text'),
+                            log =  label;
+
+                        if (input.length) {
+                            input.val(log);
+                        } else {
+                            if (log) alert(log);
+                        }
+
+                    });
+                });
+
+            });
+        </script>
 </body>
 </html>
