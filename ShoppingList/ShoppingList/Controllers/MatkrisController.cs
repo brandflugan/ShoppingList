@@ -25,25 +25,22 @@ namespace ShoppingList.Controllers
         [HttpPost]
         public ActionResult Upload(string namn)
         {
-            if (Request.Files.Count > 0)
+            var file = Request.Files[0];
+
+            if (file != null && file.ContentLength > 0)
             {
-                var file = Request.Files[0];
+                var fileName = Path.GetFileName(file.FileName);
+                List<string> lines = new List<string>();
 
-                if (file != null && file.ContentLength > 0)
+                using (StreamReader reader = new StreamReader(file.InputStream, Encoding.UTF8))
                 {
-                    var fileName = Path.GetFileName(file.FileName);
-                    List<string> lines = new List<string>();
-
-                    using (StreamReader reader = new StreamReader(file.InputStream, Encoding.UTF8))
+                    string line;
+                    while ((line = reader.ReadLine()) != null)
                     {
-                        string line;
-                        while ((line = reader.ReadLine()) != null)
+                        if (lines.Count > 0)
                         {
-                            if (lines.Count > 0)
-                            {
-                                lines.Add(line);
-                                Debug.WriteLine(line);
-                            }
+                            lines.Add(line);
+                            Debug.WriteLine(line);
                         }
                     }
                 }

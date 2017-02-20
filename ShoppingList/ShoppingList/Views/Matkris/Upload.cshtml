@@ -16,58 +16,69 @@
     <title>Upload</title>
 </head>
 <body>
+    @*<div class="container">
+            @using (Html.BeginForm("Upload", "Matkris", FormMethod.Post, new { enctype = "multipart/form-data", @id = "UploadFormSubmit" }))
+            {
+                <div class="form-group">
+                    <input class="form-control" type="file" name="browseFile" />
+                    <input class="form-control" type="submit" value="Ladda upp" name="submitFile" />
+                </div>
+            }
+        </div>
+        <div id="responseMessage">
+            <p>@Model</p>
+        </div>*@
 
     <div class="container">
         @using (Html.BeginForm("Upload", "Matkris", FormMethod.Post, new { enctype = "multipart/form-data" }))
         {
-            @*<div class="form-group">
-                <label class="btn btn-default btn-file">
-                    Välj fil: <input class="form-control" type="file" name="browseFile" display="none" />
-                </label>
-                <input class="form-control" type="submit" value="Ladda upp" name="submitFile" />
-            </div>*@
             <div class="input-group">
                 <label class="input-group-btn">
                     <span class="btn btn-primary">
-                        Välj fil: <input type="file" style="display: none;">
+                        Välj fil: <input type="file" style="display: none;" name="browseFile">
                     </span>
                 </label>
-                <input input class="form-control" name="browseFile" readonly disabled="disabled">
+                <input input class="form-control" readonly disabled="disabled">
             </div>
-            <input class="form-control" type="submit" value="Ladda upp" name="submitFile" />
+            <input class="form-control" type="submit" value="Ladda upp" name="submitFile" id="submitFile" disabled />
         }
 
-    <div id="responseMessage">
-        <p>@Model</p>
+        <div id="responseMessage">
+            <p>@Model</p>
+        </div>
     </div>
+    <script>
+        $(function () {
 
-        <script>
-            $(function () {
-
-                // We can attach the `fileselect` event to all file inputs on the page
-                $(document).on('change', ':file', function () {
-                    var input = $(this),
-                        label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
-                    input.trigger('fileselect', label);
-                });
-
-                // We can watch for our custom `fileselect` event like this
-                $(document).ready(function () {
-                    $(':file').on('fileselect', function (event, label) {
-
-                        var input = $(this).parents('.input-group').find(':text'),
-                            log =  label;
-
-                        if (input.length) {
-                            input.val(log);
-                        } else {
-                            if (log) alert(log);
-                        }
-
-                    });
-                });
-
+            // We can attach the `fileselect` event to all file inputs on the page
+            $(document).on('change', ':file', function () {
+                var input = $(this),
+                    label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
+                input.trigger('fileselect', label);
+                if (label != "") {
+                    $("#submitFile").prop("disabled", false);
+                }
+                else {
+                    $("#submitFile").prop("disabled", true);
+                }
             });
-        </script>
+
+            // We can watch for our custom `fileselect` event like this
+            $(document).ready(function () {
+                $(':file').on('fileselect', function (event, label) {
+
+                    var input = $(this).parents('.input-group').find(':text'),
+                        log = label;
+
+                    if (input.length) {
+                        input.val(log);
+                    } else {
+                        if (log) alert(log);
+                    }
+                });
+            });
+
+        });
+    </script>
 </body>
 </html>
