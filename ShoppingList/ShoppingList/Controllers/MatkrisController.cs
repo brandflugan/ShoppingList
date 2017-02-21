@@ -25,7 +25,7 @@ namespace ShoppingList.Controllers
             return View();
         }
 
-        public ActionResult foretag()
+        public ActionResult Foretag()
         {
             return View();
         }
@@ -67,11 +67,11 @@ namespace ShoppingList.Controllers
                 }
                 // dataAccess.UpdateProductlist(lines, );
 
-                return View(model: "Allting gick bra");
-                //   return View("~/Views/Matkris/Upload.cshtml", null, "Allting gick bra");
+                return View(model : "Allting gick bra");
+             //   return View("~/Views/matkris/Upload.cshtml", null, "Allting gick bra");
             }
             return View(model: "Allting gick dåligt");
-            //return View("~/Views/Matkris/Upload.cshtml", null, "Allting gick dåligt");
+            //return View("~/Views/matkris/upload.cshtml", null, "Allting gick dåligt");
         }
     }
 }
