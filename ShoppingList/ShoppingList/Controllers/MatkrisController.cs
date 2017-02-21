@@ -11,7 +11,7 @@ namespace ShoppingList.Controllers
 {
     public class MatkrisController : Controller
     {
-        private DataAccess.DataAccess dataAccess;
+        private DataAccess.DataAccess dataAccess = new DataAccess.DataAccess();
 
         // GET: Matkris
         public ActionResult Index()
@@ -35,7 +35,7 @@ namespace ShoppingList.Controllers
         {
             if (dataAccess.ValidateUser(email, password))
             {
-                return View("~/Views/Matkris/Upload.cshtml");
+                return View("~/Views/matkris/upload.cshtml");
             }
             else
             {
