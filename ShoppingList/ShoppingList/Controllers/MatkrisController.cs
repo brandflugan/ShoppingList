@@ -22,6 +22,11 @@ namespace ShoppingList.Controllers
             return View();
         }
 
+        public ActionResult foretag()
+        {
+            return View();
+        }
+
         [HttpPost]
         public ActionResult Upload(string namn)
         {
