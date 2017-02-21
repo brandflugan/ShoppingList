@@ -19,6 +19,7 @@ namespace ShoppingList.Controllers
             return View();
         }
 
+        [Authorize]
         public ActionResult Upload()
         {
             return View();
@@ -27,6 +28,19 @@ namespace ShoppingList.Controllers
         public ActionResult foretag()
         {
             return View();
+        }
+
+        [HttpPost]
+        public ActionResult foretag(string email, string password)
+        {
+            if (dataAccess.ValidateUser(email, password))
+            {
+                return View("~/Views/Matkris/Upload.cshtml");
+            }
+            else
+            {
+                return new EmptyResult();
+            }
         }
 
         [HttpPost]
@@ -51,10 +65,10 @@ namespace ShoppingList.Controllers
                         }
                     }
                 }
-               // dataAccess.UpdateProductlist(lines, );
+                // dataAccess.UpdateProductlist(lines, );
 
-                return View(model : "Allting gick bra");
-             //   return View("~/Views/Matkris/Upload.cshtml", null, "Allting gick bra");
+                return View(model: "Allting gick bra");
+                //   return View("~/Views/Matkris/Upload.cshtml", null, "Allting gick bra");
             }
             return View(model: "Allting gick dåligt");
             //return View("~/Views/Matkris/Upload.cshtml", null, "Allting gick dåligt");
