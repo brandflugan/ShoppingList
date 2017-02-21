@@ -11,6 +11,8 @@ namespace ShoppingList.Controllers
 {
     public class MatkrisController : Controller
     {
+        private DataAccess.DataAccess dataAccess;
+
         // GET: Matkris
         public ActionResult Index()
         {
@@ -28,7 +30,7 @@ namespace ShoppingList.Controllers
         }
 
         [HttpPost]
-        public ActionResult Upload(string namn)
+        public ActionResult Upload(string emptyParameter)
         {
             var file = Request.Files[0];
 
@@ -49,9 +51,13 @@ namespace ShoppingList.Controllers
                         }
                     }
                 }
-                return View("~/Views/Matkris/Upload.cshtml", null, "Allting gick bra");
+               // dataAccess.UpdateProductlist(lines, );
+
+                return View(model : "Allting gick bra");
+             //   return View("~/Views/Matkris/Upload.cshtml", null, "Allting gick bra");
             }
-            return View("~/Views/Matkris/Upload.cshtml", null, "Allting gick dåligt");
+            return View(model: "Allting gick dåligt");
+            //return View("~/Views/Matkris/Upload.cshtml", null, "Allting gick dåligt");
         }
     }
 }
