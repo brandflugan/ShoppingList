@@ -3,7 +3,7 @@
 <html>
 <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>@ViewBag.Title - Matkris.se</title>
 
     <!-- scripts -->
@@ -16,7 +16,10 @@
 </head>
 <body>
     <div>
-        @RenderBody()
+        @Html.Partial("meny")
+        <div class="container">
+            @RenderBody()
+        </div>
     </div>
 
     <script>
@@ -29,8 +32,8 @@
                 $('.menu-item-click').each(function () {
                     var a_href = $(this).find('a').attr('href'),
                         url = window.location.pathname;
-                        subsite = url.substring(url.lastIndexOf('/')+1);
-                        console.log(a_href + " " + subsite);
+                    subsite = url.substring(url.lastIndexOf('/') + 1);
+                    console.log(a_href + " " + subsite);
 
                     if (subsite == a_href) {
                         $(this).addClass('active');
