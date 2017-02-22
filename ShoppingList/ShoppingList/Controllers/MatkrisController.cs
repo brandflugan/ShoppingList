@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Security;
 
 namespace ShoppingList.Controllers
 {
@@ -35,11 +36,13 @@ namespace ShoppingList.Controllers
         {
             if (dataAccess.ValidateUser(email, password))
             {
-                return View("~/Views/matkris/upload.cshtml");
+                FormsAuthentication.SetAuthCookie(email, false);
+
+                return RedirectToAction("upload");
             }
             else
             {
-                return new EmptyResult();
+                return RedirectToAction("foretag");
             }
         }
 

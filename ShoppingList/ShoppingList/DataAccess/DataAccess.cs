@@ -27,7 +27,9 @@ namespace ShoppingList.DataAccess
                 command.Parameters.Add(new SqlParameter("epost", email));
                 command.Parameters.Add(new SqlParameter("losen", password));
 
-                count = command.ExecuteNonQuery();
+                conn.Open();
+                count = (int) command.ExecuteScalar();
+                conn.Close();
             }
 
             if (count > 0)
