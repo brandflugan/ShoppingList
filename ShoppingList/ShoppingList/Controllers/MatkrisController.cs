@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Web;
 using System.Web.Mvc;
@@ -36,7 +37,15 @@ namespace ShoppingList.Controllers
         {
             if (dataAccess.ValidateUser(email, password))
             {
-                FormsAuthentication.SetAuthCookie(email, false);
+                var identity = new ClaimsIdentity(new[] {
+                    new Claim(ClaimTypes.Email, email),},
+                    "ApplicationCookie"
+                    );
+
+                var ctx = Request.GetOwinContext();
+                var authManager = ctx.Authentication;
+
+                authManager.SignIn(identity);
 
                 return RedirectToAction("upload");
             }
@@ -70,8 +79,8 @@ namespace ShoppingList.Controllers
                 }
                 // dataAccess.UpdateProductlist(lines, );
 
-                return View(model : "Allting gick bra");
-             //   return View("~/Views/matkris/Upload.cshtml", null, "Allting gick bra");
+                return View(model: "Allting gick bra");
+                //   return View("~/Views/matkris/Upload.cshtml", null, "Allting gick bra");
             }
             return View(model: "Allting gick dåligt");
             //return View("~/Views/matkris/upload.cshtml", null, "Allting gick dåligt");
@@ -80,7 +89,11 @@ namespace ShoppingList.Controllers
         [HttpPost]
         public ActionResult Logout()
         {
-            FormsAuthentication.SignOut();
+            var ctx = Request.GetOwinContext();
+            var authManager = ctx.Authentication;
+
+            authManager.SignOut("ApplicationCookie");
+
             return RedirectToAction("foretag");
         }
     }
