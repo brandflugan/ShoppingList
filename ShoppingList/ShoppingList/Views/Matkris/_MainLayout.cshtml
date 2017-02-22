@@ -17,11 +17,10 @@
 <body>
     @Html.Partial("meny")
 
-    @*<script>
-        //on load give active class to active subsite
+    <script>
         $(window).on('load', function () {
-
-            var element = document.getElementsByClassName('menu');
+            //on load give active class to active subsite
+            /*var element = document.getElementsByClassName('menu');
             if (typeof (element) != 'undefined' && element != null) {
                 // exist
                 $('.menu-item-click').each(function () {
@@ -36,9 +35,9 @@
                         $(this).removeClass('active');
                     }
                 });
-            }
+            }*/
         });
-    </script>*@
+    </script>
     <div class="container">
         @RenderBody()
     </div>

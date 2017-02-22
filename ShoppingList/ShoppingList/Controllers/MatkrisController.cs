@@ -76,5 +76,12 @@ namespace ShoppingList.Controllers
             return View(model: "Allting gick dåligt");
             //return View("~/Views/matkris/upload.cshtml", null, "Allting gick dåligt");
         }
+
+        [HttpPost]
+        public ActionResult Logout()
+        {
+            FormsAuthentication.SignOut();
+            return RedirectToAction("foretag");
+        }
     }
 }
