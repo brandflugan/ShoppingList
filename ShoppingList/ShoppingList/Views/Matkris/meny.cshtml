@@ -2,11 +2,14 @@
     <div class="container-fluid">
         <div class="container">
             <div class="navbar-header">
-            <a class="navbar-brand" href="index">matkris.se</a>
+                <a class="navbar-brand" href="index">matkris.se</a>
             </div>
             <ul class="nav navbar-nav">
-            <li class="menu-item-click" id="menu-state-private"><a href="privat">Privat</a></li>
-            <li class="menu-item-click" id="menu-state-business"><a href="foretag">Företag</a></li>
+
+                    <li class="menu-item-click @if (Request.RawUrl.ToLower().Contains("privat")) {<text>active</text> }" id="menu-state-private"><a href="privat">Privat</a></li>
+                    <li class="menu-item-click @if (Request.RawUrl.ToLower().Contains("foretag")) {<text>active</text> }" id="menu-state-business"><a href="foretag">Företag</a></li>
+
+
             </ul>
         </div>
     </div>

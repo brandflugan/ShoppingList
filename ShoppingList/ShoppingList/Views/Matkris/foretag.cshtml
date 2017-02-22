@@ -3,18 +3,28 @@
     Layout = "~/Views/Matkris/_MainLayout.cshtml";
 }
 
-<div class="row">
-    <div class="col-md-6 col-md-offset-3 bg-default">
-        <div class="center-block">
-            @using (Html.BeginForm("Foretag", "Matkris", FormMethod.Post, new { enctype = "multipart/form-data" }))
+<div class="row row-grid">
+
+    @using (Html.BeginForm("Foretag", "Matkris", FormMethod.Post, new { enctype = "multipart/form-data" }))
             {
-                <h2 class="form-signin-heading">Logga in</h2>
-                    <input type="text" class="form-control" name="email" placeholder="Emailadress" required="" autofocus="" />
-                    <input type="password" class="form-control" name="password" placeholder="Lösenord" required="" />
-                    <button class="btn btn-primary btn-block" type="submit">Login</button>
-            }
+        <div class="col-md-6 col-md-offset-3">
+            <h2 class="form-signin-heading">Logga in</h2>
         </div>
-    </div>
+
+        <div class="col-md-6 col-md-offset-3">
+            <input type="text" class="form-control" name="email" placeholder="Emailadress" required="" autofocus="" />
+        </div>
+
+        <div class="col-md-6 col-md-offset-3">
+            <input type="password" class="form-control" name="password" placeholder="Lösenord" required="" />
+        </div>
+
+        <div class="col-md-6 col-md-offset-3">
+            <button class="btn btn-primary btn-block btn-space" type="submit">Login</button>
+        </div>
+
+    }
+
 </div>
 
 <script>

@@ -15,20 +15,15 @@
     <link rel="stylesheet" href="~/Content/css/main.css" type="text/css" />
 </head>
 <body>
-    <div>
-        @Html.Partial("meny")
-        <div class="container">
-            @RenderBody()
-        </div>
-    </div>
+    @Html.Partial("meny")
 
-    <script>
+    @*<script>
         //on load give active class to active subsite
         $(window).on('load', function () {
 
             var element = document.getElementsByClassName('menu');
             if (typeof (element) != 'undefined' && element != null) {
-                // exists.
+                // exist
                 $('.menu-item-click').each(function () {
                     var a_href = $(this).find('a').attr('href'),
                         url = window.location.pathname;
@@ -43,6 +38,11 @@
                 });
             }
         });
-    </script>
+    </script>*@
+    <div class="container">
+        @RenderBody()
+    </div>
+
+
 </body>
 </html>
