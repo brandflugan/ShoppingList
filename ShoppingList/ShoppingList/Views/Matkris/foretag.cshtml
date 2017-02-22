@@ -2,16 +2,18 @@
 @{
     Layout = "~/Views/Matkris/_MainLayout.cshtml";
 }
-@Html.Partial("meny")
-<div>
-    <div class="wrapper">
-        @using (Html.BeginForm("Foretag", "Matkris", FormMethod.Post, new { enctype = "multipart/form-data" }))
-        {
-            <h2 class="form-signin-heading">Please login</h2>
-            <input type="text" class="form-control" name="email" placeholder="Email Address" required="" autofocus="" />
-            <input type="password" class="form-control" name="password" placeholder="Password" required="" />
-            <button class="btn btn-primary btn-block" type="submit">Login</button>
-        }
+
+<div class="row">
+    <div class="col-md-6 col-md-offset-3 bg-default">
+        <div class="center-block">
+            @using (Html.BeginForm("Foretag", "Matkris", FormMethod.Post, new { enctype = "multipart/form-data" }))
+            {
+                <h2 class="form-signin-heading">Logga in</h2>
+                    <input type="text" class="form-control" name="email" placeholder="Emailadress" required="" autofocus="" />
+                    <input type="password" class="form-control" name="password" placeholder="Lösenord" required="" />
+                    <button class="btn btn-primary btn-block" type="submit">Login</button>
+            }
+        </div>
     </div>
 </div>
 
