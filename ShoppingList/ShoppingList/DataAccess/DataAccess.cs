@@ -8,7 +8,6 @@ namespace ShoppingList.DataAccess
 {
     public class DataAccess
     {
-        // string connectionString = @"data source=(LocalDB)\MSSQLLocalDB;attachdbfilename=" + Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\" + "QuizDatabase.mdf;integrated security=True;connect timeout=30;MultipleActiveResultSets=True;App=EntityFramework";
         string connectionString = @"Data Source=(localdb)\ProjectsV13;Initial Catalog = MatkrisDB; Integrated Security = True; Connect Timeout = 30; Encrypt=False;TrustServerCertificate=True;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
 
         public static void Seed()

@@ -59,8 +59,9 @@ namespace ShoppingList.Controllers
         public ActionResult Upload(string emptyParameter)
         {
             var file = Request.Files[0];
+            List<string> errors = new List<string>();
 
-            if (file != null && file.ContentLength > 0)
+            if (file != null && file.ContentLength > 1)
             {
                 var fileName = Path.GetFileName(file.FileName);
                 List<string> lines = new List<string>();
@@ -70,20 +71,71 @@ namespace ShoppingList.Controllers
                     string line;
                     while ((line = reader.ReadLine()) != null)
                     {
-                        if (lines.Count > 0)
-                        {
-                            lines.Add(line);
-                            Debug.WriteLine(line);
-                        }
+                        lines.Add(line);
                     }
                 }
-                // dataAccess.UpdateProductlist(lines, );
 
-                return View(model: "Allting gick bra");
-                //   return View("~/Views/matkris/Upload.cshtml", null, "Allting gick bra");
+                ValidateProductlist(lines, ref errors);
+
+                if (errors.Count == 0)
+                {
+                    // dataAccess.UpdateProductlist(lines, );
+                    errors.Add("Allt gick bra");
+                }
             }
-            return View(model: "Allting gick dåligt");
-            //return View("~/Views/matkris/upload.cshtml", null, "Allting gick dåligt");
+            else
+            {
+                errors.Add("Den uppladdade filten är ej giltig eller saknar innehåll. Se exempel för hur filen ska se ut.");
+            }
+
+            return View(errors);
+        }
+
+        private void ValidateProductlist(List<string> productlist, ref List<string> errorlist)
+        {
+            if (productlist[0].ToLower().Contains(("Artnummer;Produktnamn;Pris;kategori;typ;Bild-URL;").ToLower()))
+            {
+                errorlist.Add("Första raden på prisfilen är ej korrekt formatterad. Se exempel för hur raden ska se ut.");
+            }
+
+            for (int i = 1; i < productlist.Count + 1; i++)
+            {
+                var details = productlist[i].Split(';');
+                var error = "";
+
+                if (details.Length != 6)
+                {
+                    error += "Raden innehåller inte korrekt antal fält. \n";
+                }
+                else
+                {
+                    int value = 0;
+                    if (!int.TryParse(details[0], out value))
+                    {
+                        error += "Fältet Artnummer är inte ett nummer: " + details[0] + ". \n";
+                    }
+                    else
+                    {
+                        if (details[0].Length != 4)
+                        {
+                            error += "Fältet Artnummer är inte korrekt längd: " + details[0] + ". \n";
+                        }
+                    }
+                    details[2].Replace(',', '.');
+                    decimal dvalue = 0;
+
+                    if (!decimal.TryParse(details[2], out dvalue))
+                    {
+                        error += "Fältet Pris är inte ett belopp: " + details[2] + ". \n";
+                    }
+
+                }
+                if (error != "")
+                {
+                    errorlist.Add("Fel på rad " + (i + 1) + ": " + productlist[i] + "\n");
+                    errorlist[errorlist.Count - 1] += error;
+                }
+            }
         }
 
         [HttpPost]
