@@ -53,8 +53,7 @@
                 foreach (var error in Model)
                 {
                     <div class="alert alert-danger" role="alert">
-                        <span class="glyphicon glyphicon-ban-circle"></span>
-                        <h4 class="alert-heading">Felmeddelande på rad{ErrorRow}<!--TODO--></h4>
+                        <h4 class="alert-heading"><span class="glyphicon glyphicon-exclamation-sign"></span> Felmeddelande på rad{ErrorRow}<!--TODO--></h4>
                         <p class="mb-0" style="word-wrap:break-word;">@error</p>
                     </div>
                 }
