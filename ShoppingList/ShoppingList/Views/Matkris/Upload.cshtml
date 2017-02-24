@@ -1,69 +1,48 @@
-﻿@model IList<string>
+﻿@model String
 
 @{
     Layout = "~/Views/Matkris/_MainLayout.cshtml";
 }
 
-<!DOCTYPE html>
-
-<html>
-<head>
-    <title>Upload</title>
-</head>
-<body>
-    <div class="container">
+<div class="row">
+    <div class="col-sm-offset-1 col-sm-10 col-xs-12">
         @using (Html.BeginForm("Upload", "Matkris", FormMethod.Post, new { enctype = "multipart/form-data" }))
-        {
-            <div class="input-group">
-                <label class="input-group-btn">
-                    <span class="btn btn-primary">
-                        Välj fil: <input type="file" style="display: none;" name="browseFile">
-                    </span>
-                </label>
-                <input input class="form-control" readonly disabled="disabled">
-            </div>
-            <input class="form-control" type="submit" value="Ladda upp" name="submitFile" id="submitFile" disabled />
-        }
-
-        <div id="responseMessage">
-            @if (Model != null)
             {
-                foreach (var error in Model)
-                {
-                    <p>@error</p>
-                }
-            }
+            <div class="row justify-content-md-center">
+                <div class="col-sm-10 col-xs-12">
+                    <h2 class="form-signin-heading">Produktlistan</h2>
+                </div>
+            </div>
+
+            <div class="row justify-content-md-center">
+                <div class="col-sm-9 col-xs-12 margin-15-bot">
+                    <div class="input-group">
+                        <label class="input-group-btn">
+                            <span class="btn btn-primary">
+                                Välj fil: <input type="file" style="display: none;" name="browseFile">
+                            </span>
+                        </label>
+                        <input input class="form-control" readonly disabled="disabled">
+                    </div>
+                </div>
+                <div class="col-sm-3 col-xs-12">
+                    <input class="btn btn-success btn-100-width" type="submit" value="Ladda upp" name="submitFile" id="submitFile" disabled />
+                </div>
+            </div>
+
+            <div class="row row-grid justify-content-md-center">
+
+            </div>
+        }
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-sm-offset-1 col-sm-10 col-xs-12">
+        <div id="responseMessage" class="well">
+            <p>@Model</p>
+            <p>asd 123 5151 1231 2332</p>
         </div>
     </div>
-    <script>
-        $(function () {
-            $(document).on('change', ':file', function () {
-                var input = $(this),
-                    label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
-                input.trigger('fileselect', label);
-                if (label != "") {
-                    $("#submitFile").prop("disabled", false);
-                }
-                else {
-                    $("#submitFile").prop("disabled", true);
-                }
-            });
+</div>
 
-            $(document).ready(function () {
-                $(':file').on('fileselect', function (event, label) {
-
-                    var input = $(this).parents('.input-group').find(':text'),
-                        log = label;
-
-                    if (input.length) {
-                        input.val(log);
-                    } else {
-                        if (log) alert(log);
-                    }
-                });
-            });
-
-        });
-    </script>
-</body>
-</html>

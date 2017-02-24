@@ -1,20 +1,27 @@
-﻿<nav class="navbar navbar-default navbar-static-top menu">
-    <div class="container-fluid">
-        <div class="container">
-            <div class="navbar-header">
-                <a class="navbar-brand" href="index">matkris.se</a>
-            </div>
-            <ul class="nav navbar-nav">
-                <li class="menu-item-click @if (Request.RawUrl.ToLower().Contains("privat")) {<text>active</text> }" id="menu-state-private"><a href="privat">Privat</a></li>
-                <li class="menu-item-click @if (Request.RawUrl.ToLower().Contains("foretag")) {<text>active</text> }" id="menu-state-business"><a href="foretag">Företag</a></li>
+﻿<div class="navbar navbar-default navbar-static-top menu">
+    <div class="container">
+        <div class="navbar-header">
+            <button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#navbar-main">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="index">Matkris.se</a>
+        </div>
+        <center>
+            <div class="navbar-collapse collapse" id="navbar-main">
+                <ul class="nav navbar-nav">
+                    <li class="menu-item-click @if (Request.RawUrl.ToLower().Contains("privat")) {<text>active</text> }" id="menu-state-private"><a href="privat">Privat</a></li>
+                    <li class="menu-item-click @if (Request.RawUrl.ToLower().Contains("foretag")) {<text>active</text> }" id="menu-state-business"><a href="foretag">Företag</a></li>
+                </ul>
                 @if (Request.RawUrl.ToLower().Contains("upload"))
                 {
-                    using (Html.BeginForm("Logout", "Matkris", FormMethod.Post))
+                    using (Html.BeginForm("Logout", "Matkris", FormMethod.Post, new { @class ="navbar-right" }))
                     {
-                    <li class="" id="menu-logout"><button class="btn btn-default btn-sm" type="submit">Logga ut</button></li>
+                        <button id="menu-logout" class="btn btn-default navbar-btn btn-sm" type="submit">Logga ut</button>
                     }
                 }
-            </ul>
-        </div>
+            </div>
+        </center>
     </div>
-</nav>
+</div>

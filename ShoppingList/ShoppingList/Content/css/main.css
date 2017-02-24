@@ -22,6 +22,26 @@
     display: block;
 }
 
+.row {
+    margin-bottom: 15px;
+}
+
+.row-new-table {
+    margin-top: 60px;
+}
+
+.btn-100-width {
+    width: 100%;
+}
+
+.margin-15-top {
+    margin-top: 15px;
+}
+
+.margin-15-bot {
+    margin-bottom: 15px;
+}
+
 .row.row-grid [class*="col-"] + [class*="col-"] {
     margin-top: 15px;
 }
