@@ -97,7 +97,7 @@ namespace ShoppingList.Controllers
 
         private void ValidateProductlist(List<string> productlist, ref List<string> errorlist)
         {
-            if (productlist[0].ToLower() != ("Artnummer;Produktnamn;Pris;kategori;typ;Bild-URL;").ToLower())
+            if (productlist[0].ToLower() != ("Artnummer;Produktnamn;Pris;kategori;typ;Bild-URL").ToLower())
             {
                 errorlist.Add("Första raden på prisfilen är ej korrekt formatterad. Se exempel för hur raden ska se ut.");
             }
