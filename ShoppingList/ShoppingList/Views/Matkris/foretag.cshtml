@@ -2,28 +2,35 @@
 @{
     Layout = "~/Views/Matkris/_MainLayout.cshtml";
 }
-
 <div class="row row-grid">
+    <div class="col-sm-offset-1 col-sm-10 col-xs-12">
 
-    @using (Html.BeginForm("Foretag", "Matkris", FormMethod.Post, new { enctype = "multipart/form-data" }))
+        @using (Html.BeginForm("Foretag", "Matkris", FormMethod.Post, new { enctype = "multipart/form-data" }))
             {
-        <div class="col-md-6 col-md-offset-3">
-            <h2 class="form-signin-heading">Logga in</h2>
-        </div>
+            <div class="row justify-content-md-center">
+                <div class="col-xs-12 col-md-6 col-md-offset-3">
+                    <h2 class="form-signin-heading">Logga in</h2>
+                </div>
+            </div>
 
-        <div class="col-md-6 col-md-offset-3">
-            <input type="text" class="form-control" name="email" placeholder="Emailadress" required="" autofocus="" />
-        </div>
+            <div class="row justify-content-md-center">
+                <div class="col-xs-12 col-md-6 col-md-offset-3">
+                    <input type="text" class="form-control" name="email" placeholder="Emailadress" required="" autofocus="" />
+                </div>
+            </div>
 
-        <div class="col-md-6 col-md-offset-3">
-            <input type="password" class="form-control" name="password" placeholder="Lösenord" required="" />
-        </div>
+            <div class="row justify-content-md-center">
+                <div class="col-xs-12 col-md-6 col-md-offset-3">
+                    <input type="password" class="form-control" name="password" placeholder="Lösenord" required="" />
+                </div>
+            </div>
 
-        <div class="col-md-6 col-md-offset-3">
-            <button class="btn btn-primary btn-block btn-space" type="submit">Login</button>
-        </div>
+            <div class="row justify-content-md-center">
+                <div class="col-xs-12 col-md-6 col-md-offset-3">
+                    <button class="btn btn-primary btn-block btn-space" type="submit">Login</button>
+                </div>
+            </div>
+        }
 
-    }
-
+    </div>
 </div>
-
