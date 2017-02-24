@@ -81,6 +81,7 @@ namespace ShoppingList.Controllers
                 {
                     // dataAccess.UpdateProductlist(lines, );
                     errors.Add("Allt gick bra");
+
                 }
             }
             else
