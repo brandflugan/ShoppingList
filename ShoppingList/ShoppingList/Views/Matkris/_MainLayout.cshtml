@@ -18,26 +18,36 @@
     @Html.Partial("meny")
 
     <script>
-        $(window).on('load', function () {
-            //on load give active class to active subsite
-            /*var element = document.getElementsByClassName('menu');
-            if (typeof (element) != 'undefined' && element != null) {
-                // exist
-                $('.menu-item-click').each(function () {
-                    var a_href = $(this).find('a').attr('href'),
-                        url = window.location.pathname;
-                    subsite = url.substring(url.lastIndexOf('/') + 1);
-                    console.log(a_href + " " + subsite);
+        $(function () {
+            $(document).on('change', ':file', function () {
+                var input = $(this),
+                    label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
+                input.trigger('fileselect', label);
+                if (label != "") {
+                    $("#submitFile").prop("disabled", false);
+                }
+                else {
+                    $("#submitFile").prop("disabled", true);
+                }
+            });
 
-                    if (subsite == a_href) {
-                        $(this).addClass('active');
+            $(document).ready(function () {
+                $(':file').on('fileselect', function (event, label) {
+
+                    var input = $(this).parents('.input-group').find(':text'),
+                        log = label;
+
+                    if (input.length) {
+                        input.val(log);
                     } else {
-                        $(this).removeClass('active');
+                        if (log) alert(log);
                     }
                 });
-            }*/
+            });
+
         });
     </script>
+
     <div class="container">
         @RenderBody()
     </div>
