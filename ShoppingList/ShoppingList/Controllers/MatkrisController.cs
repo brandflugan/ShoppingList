@@ -100,7 +100,7 @@ namespace ShoppingList.Controllers
 
             for (int i = 1; i < productlist.Count + 1; i++)
             {
-                var details = productlist[i].Split(';');
+                var details = productlist[i-1].Split(';');
                 var error = "";
 
                 if (details.Length != 6)
