@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Security.Claims;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
@@ -68,9 +69,12 @@ namespace ShoppingList.Controllers
 
                 using (StreamReader reader = new StreamReader(file.InputStream, Encoding.UTF8))
                 {
+                    UTF8Encoding ascii = new UTF8Encoding();
                     string line;
+
                     while ((line = reader.ReadLine()) != null)
                     {
+                        line = Regex.Replace(line, "\uFFFD", "ö");
                         lines.Add(line);
                     }
                 }
@@ -80,8 +84,7 @@ namespace ShoppingList.Controllers
                 if (errors.Count == 0)
                 {
                     // dataAccess.UpdateProductlist(lines, );
-                    errors.Add("Allt gick bra");
-
+                   // errors.Add("Allt gick bra");
                 }
             }
             else
@@ -94,14 +97,14 @@ namespace ShoppingList.Controllers
 
         private void ValidateProductlist(List<string> productlist, ref List<string> errorlist)
         {
-            if (productlist[0].ToLower().Contains(("Artnummer;Produktnamn;Pris;kategori;typ;Bild-URL;").ToLower()))
+            if (productlist[0].ToLower() != ("Artnummer;Produktnamn;Pris;kategori;typ;Bild-URL;").ToLower())
             {
                 errorlist.Add("Första raden på prisfilen är ej korrekt formatterad. Se exempel för hur raden ska se ut.");
             }
 
-            for (int i = 1; i < productlist.Count + 1; i++)
+            for (int i = 1; i < productlist.Count; i++)
             {
-                var details = productlist[i-1].Split(';');
+                var details = productlist[i].Split(';');
                 var error = "";
 
                 if (details.Length != 6)
