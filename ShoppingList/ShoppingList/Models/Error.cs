@@ -8,6 +8,12 @@ namespace ShoppingList.Models
     public class Error
     {
         public int ErrorRow { get; set; }
-        public int ErrorText { get; set; }
+        public string ErrorText { get; set; }
+
+        public Error(int row, string text)
+        {
+            ErrorRow = row;
+            ErrorText = text;
+        }
     }
 }

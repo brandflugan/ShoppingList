@@ -1,4 +1,4 @@
-﻿@model IList<string>
+﻿@model ShoppingList.Models.UploadViewModel
 
 @{
     Layout = "~/Views/Matkris/_MainLayout.cshtml";
@@ -11,6 +11,7 @@
             <div class="row justify-content-md-center">
                 <div class="col-sm-10 col-xs-12">
                     <h2 class="form-signin-heading">Produktlistan</h2>
+                    <h3>Inloggad som @Model.Businessname</h3>
                 </div>
             </div>
 
@@ -38,9 +39,9 @@
 </div>
 <div class="row">
     <div class="col-sm-offset-1 col-sm-10 col-xs-12">
-        @if (Model != null)
+        @if (Model.Errors != null)
         {
-            if (Model.Count == 0)
+            if (Model.Errors.Count == 0)
             {
                 <div class="alert alert-success" role="alert">
                     <h4 class="alert-heading"><span class="glyphicon glyphicon-check"></span> Uppladdning godkänd!</h4>
@@ -50,11 +51,14 @@
             }
             else
             {
-                foreach (var error in Model)
+                foreach (ShoppingList.Models.Error error in Model.Errors)
                 {
                     <div class="alert alert-danger" role="alert">
-                        <h4 class="alert-heading"><span class="glyphicon glyphicon-exclamation-sign"></span> Felmeddelande på rad{ErrorRow}<!--TODO--></h4>
-                        <p class="mb-0" style="word-wrap:break-word;">@error</p>
+                        <h4 class="alert-heading">
+                            <span class="glyphicon glyphicon-exclamation-sign"></span> Felmeddelande @if (error.ErrorRow > 0)
+                        { <text>(rad @error.ErrorRow)</text> }
+                        </h4>
+                        <p class="mb-0" style="word-wrap:break-word;">@error.ErrorText</p>
                     </div>
                 }
 

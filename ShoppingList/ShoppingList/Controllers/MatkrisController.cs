@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ShoppingList.Models;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -25,7 +26,9 @@ namespace ShoppingList.Controllers
         [Authorize]
         public ActionResult Upload()
         {
-            return View();
+            string businessname = System.Web.HttpContext.Current.GetOwinContext().Authentication.User.Identity.Name;
+
+            return View(new UploadViewModel { Businessname = businessname });
         }
 
         public ActionResult Foretag()
@@ -39,7 +42,8 @@ namespace ShoppingList.Controllers
             if (dataAccess.ValidateUser(email, password))
             {
                 var identity = new ClaimsIdentity(new[] {
-                    new Claim(ClaimTypes.Email, email),},
+                    new Claim(ClaimTypes.Email, email),
+                    new Claim(ClaimTypes.Name, dataAccess.GetBusinessname(email))},
                     "ApplicationCookie"
                     );
 
@@ -60,7 +64,7 @@ namespace ShoppingList.Controllers
         public ActionResult Upload(string emptyParameter)
         {
             var file = Request.Files[0];
-            List<string> errors = new List<string>();
+            List<Error> errors = new List<Error>();
 
             if (file != null && file.ContentLength > 1)
             {
@@ -74,70 +78,80 @@ namespace ShoppingList.Controllers
 
                     while ((line = reader.ReadLine()) != null)
                     {
-                        line = Regex.Replace(line, "\uFFFD", "ö");
+                        if (line.Contains("\uFFFD"))
+                        {
+                            errors.Add(new Error(0, "Den uppladdade filten är inte i korrekt format. Spara filen som UTF-8 för att fortsätta."));
+                            break;
+                        }
                         lines.Add(line);
                     }
+                    if (errors.Count != 1)
+                    {
+                        ValidateProductlist(lines, ref errors);
+                    }
                 }
-
-                ValidateProductlist(lines, ref errors);
 
                 if (errors.Count == 0)
                 {
                     // dataAccess.UpdateProductlist(lines, );
-                   // errors.Add("Allt gick bra");
                 }
             }
             else
             {
-                errors.Add("Den uppladdade filten är ej giltig eller saknar innehåll. Se exempel för hur filen ska se ut.");
+                errors.Add(new Error(0, "Den uppladdade filten är ej giltig eller saknar innehåll. Se exempel för hur filen ska se ut."));
             }
 
-            return View(errors);
+            string businessname = System.Web.HttpContext.Current.GetOwinContext().Authentication.User.Identity.Name;
+
+            return View(new UploadViewModel { Errors = errors, Businessname = businessname });
         }
 
-        private void ValidateProductlist(List<string> productlist, ref List<string> errorlist)
+        private void ValidateProductlist(List<string> productlist, ref List<Error> errorlist)
         {
             if (productlist[0].ToLower() != ("Artnummer;Produktnamn;Pris;kategori;typ;Bild-URL").ToLower())
             {
-                errorlist.Add("Första raden på prisfilen är ej korrekt formatterad. Se exempel för hur raden ska se ut.");
+                errorlist.Add(new Error(1, "Första raden på prisfilen är ej korrekt formatterad. Se exempel för hur raden ska se ut."));
             }
 
-            for (int i = 1; i < productlist.Count; i++)
+            else
             {
-                var details = productlist[i].Split(';');
-                var error = "";
+                for (int i = 1; i < productlist.Count; i++)
+                {
+                    var details = productlist[i].Split(';');
+                    var error = "";
 
-                if (details.Length != 6)
-                {
-                    error += "Raden innehåller inte korrekt antal fält. \n";
-                }
-                else
-                {
-                    int value = 0;
-                    if (!int.TryParse(details[0], out value))
+                    if (details.Length != 6)
                     {
-                        error += "Fältet Artnummer är inte ett nummer: " + details[0] + ". \n";
+                        error += "Raden innehåller inte korrekt antal fält. \n";
                     }
                     else
                     {
-                        if (details[0].Length != 4)
+                        int value = 0;
+                        if (!int.TryParse(details[0], out value))
                         {
-                            error += "Fältet Artnummer är inte korrekt längd: " + details[0] + ". \n";
+                            error += "Fältet Artnummer är inte ett nummer: " + details[0] + ". \n";
                         }
-                    }
-                    details[2].Replace(',', '.');
-                    decimal dvalue = 0;
+                        else
+                        {
+                            if (details[0].Length != 4)
+                            {
+                                error += "Fältet Artnummer är inte korrekt längd: " + details[0] + ". \n";
+                            }
+                        }
+                        details[2].Replace(',', '.');
+                        decimal dvalue = 0;
 
-                    if (!decimal.TryParse(details[2], out dvalue))
+                        if (!decimal.TryParse(details[2], out dvalue))
+                        {
+                            error += "Fältet Pris är inte ett belopp: " + details[2] + ". \n";
+                        }
+
+                    }
+                    if (error != "")
                     {
-                        error += "Fältet Pris är inte ett belopp: " + details[2] + ". \n";
+                        errorlist.Add(new Error(i + 1, error));
+                        errorlist[errorlist.Count - 1].ErrorText += error;
                     }
-
-                }
-                if (error != "")
-                {
-                    errorlist.Add("Fel på rad " + (i + 1) + ": " + productlist[i] + "\n");
-                    errorlist[errorlist.Count - 1] += error;
                 }
             }
         }

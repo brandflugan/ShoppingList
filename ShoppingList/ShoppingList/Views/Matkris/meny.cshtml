@@ -1,4 +1,5 @@
-﻿<div class="navbar navbar-default navbar-static-top menu">
+﻿
+<div class="navbar navbar-default navbar-static-top menu">
     <div class="container">
         <div class="navbar-header">
             <button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#navbar-main">
@@ -14,10 +15,11 @@
                     <li class="menu-item-click @if (Request.RawUrl.ToLower().Contains("privat")) {<text>active</text> }" id="menu-state-private"><a href="privat">Privat</a></li>
                     <li class="menu-item-click @if (Request.RawUrl.ToLower().Contains("foretag")) {<text>active</text> }" id="menu-state-business"><a href="foretag">Företag</a></li>
                 </ul>
-                @if (Request.RawUrl.ToLower().Contains("upload"))
+                @if (Request.RawUrl.ToLower().Contains("matkris/upload"))
                 {
-                    using (Html.BeginForm("Logout", "Matkris", FormMethod.Post, new { @class ="navbar-right" }))
+                    using (Html.BeginForm("Logout", "Matkris", FormMethod.Post, new { @class = "navbar-right" }))
                     {
+                        <p class="navbar-text">Inloggad som <span id="username"></span></p>
                         <button id="menu-logout" class="btn btn-default navbar-btn btn-sm" type="submit">Logga ut</button>
                     }
                 }

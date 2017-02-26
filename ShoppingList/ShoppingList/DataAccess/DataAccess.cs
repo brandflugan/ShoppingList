@@ -27,7 +27,7 @@ namespace ShoppingList.DataAccess
                 command.Parameters.Add(new SqlParameter("losen", password));
 
                 conn.Open();
-                count = (int) command.ExecuteScalar();
+                count = (int)command.ExecuteScalar();
                 conn.Close();
             }
 
@@ -35,6 +35,28 @@ namespace ShoppingList.DataAccess
                 return true;
             else
                 return false;
+        }
+
+        public string GetBusinessname(string email)
+        {
+            var query = "SELECT Foretagsnamn FROM Foretag WHERE Epost = @email";
+            string businessname = "";
+
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                SqlCommand command = new SqlCommand(query, conn);
+                command.Parameters.Add(new SqlParameter("email", email));
+
+                conn.Open();
+                var reader = command.ExecuteReader();
+                while (reader.Read())
+                {
+                    businessname = reader.GetString(0);
+                }
+                conn.Close();
+            }
+
+            return businessname;
         }
 
         public void UpdateProductlist(List<string> productlist, string foretagsnamn)
