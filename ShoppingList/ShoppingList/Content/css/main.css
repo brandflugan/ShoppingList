@@ -1,6 +1,11 @@
 ﻿body {
 }
 
+.mt-5 {
+    display: block;
+    margin-top: 5px;
+}
+
 .btn-file {
     position: relative;
     overflow: hidden;
@@ -22,8 +27,30 @@
     display: block;
 }
 
+.form-signin-heading {
+    margin-bottom: 14px;
+}
+
+.panel-heading a:after {
+    font-family:'Glyphicons Halflings';
+    content:"\e114";
+    float: right;
+    color: grey;
+}
+.panel-heading a.collapsed:after {
+    content:"\e080";
+}
+
+.panel-body {
+    overflow-x: auto;
+}
+
+.input-row {
+    margin-bottom: 10px;
+}
+
 .row {
-    margin-bottom: 15px;
+    /*margin-bottom: 15px;*/
 }
 
 .row-new-table {
@@ -32,6 +59,10 @@
 
 .btn-100-width {
     width: 100%;
+}
+
+.btn-space {
+    margin-top: 20px;
 }
 
 .margin-15-top {

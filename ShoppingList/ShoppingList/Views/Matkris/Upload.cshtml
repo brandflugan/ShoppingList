@@ -6,6 +6,57 @@
 
 <div class="row">
     <div class="col-sm-offset-1 col-sm-10 col-xs-12">
+        <div class="row justify-content-md-center">
+            <div class="col-sm-12 col-xs-12">
+                <h1>Välkommen!</h1>
+                <p>
+                    Matkris.se hanterar dagligen produktlistor från matvarubutiker på nätet. Dessa produktlistor används för att uppdatera befintliga produkter eller nytillkomna produkter i vårt sortiment. 
+                    <span class="mt-5">För att prislistan ska visa korrekt innehåll har vi strikta krav på att ert dokument följer vår exempelfil. Filen behöver sparas i .txt-format med UTF-8 encoding.</span>
+                </p>
+
+                <div class="panel-group" id="accordion">
+                    <div class="panel panel-default" id="panel1">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a data-toggle="collapse" data-target="#collapseOne"
+                                   href="#collapseOne" class="collapsed">
+                                    Exempelfil.txt
+                                </a>
+                            </h4>
+                            <div id="collapseOne" class="panel-collapse collapse">
+                                <div class="panel-body">
+                                    <p class="text-nowrap">
+                                        Artnummer;Produktnamn;Pris;kategori;typ;Bild-URL
+                                    </p>
+                                    <p class="text-nowrap">
+                                        0001;Oregano Santa Maria, 5 g;22,95;krydda;oregano;https://d1hr6nb56yyl1.cloudfront.net/product-images/7912-150.jpg
+                                    </p>
+                                    <p class="text-nowrap">
+                                        0002;Oregano Santa Maria, 11 g;29,95;krydda;oregano;https://d1hr6nb56yyl1.cloudfront.net/product-images/7912-150.jpg
+                                    </p>
+                                    <p class="text-nowrap">
+                                        0003;Oregano Eko Santa Maria, 10 g;27,95;krydda;oregano;https://d1hr6nb56yyl1.cloudfront.net/product-images/66402-150.jpg
+                                    </p>
+                                    <p class="text-nowrap">
+                                        0004;Vetemjöl Kungsörnen 1kg;11,95;mjöl;vetemjöl;https://static.mathem.se/shared/images/products/large/07310130006043_c1r1.jpg
+                                    </p>
+                                    <p class="text-nowrap">
+                                        0005;Vetemjöl Kungsörnen 2kg;12,95;mjöl;vetemjöl;https://static.mathem.se/shared/images/products/large/07310130006029_c1r1.jpg
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="row">
+    <div class="col-sm-offset-1 col-sm-10 col-xs-12">
         @using (Html.BeginForm("Upload", "Matkris", FormMethod.Post, new { enctype = "multipart/form-data" }))
             {
             <div class="row justify-content-md-center">
@@ -39,13 +90,13 @@
 <div class="row">
     <div class="col-sm-offset-1 col-sm-10 col-xs-12">
         @if (Model.Errors != null)
-        {
-            if (Model.Errors.Count == 0)
             {
+                if (Model.Errors.Count == 0)
+                {
                 <div class="alert alert-success" role="alert">
                     <h4 class="alert-heading"><span class="glyphicon glyphicon-check"></span> Uppladdning godkänd!</h4>
                     <p class="">Era produkter kommer inom kort att dyka upp i vår sökmotor med dess aktuella priser. </p>
-                    <p class="mb-0">Gå vidare till <a href="index">startsidan</a>.</p>
+                    <span class="mt-5">Gå vidare till <a href="index">startsidan</a>.</span>
                 </div>
             }
             else
@@ -57,7 +108,7 @@
                             <span class="glyphicon glyphicon-exclamation-sign"></span> Felmeddelande @if (error.ErrorRow > 0)
                         { <text>(rad @error.ErrorRow)</text> }
                         </h4>
-                        <p class="mb-0" style="word-wrap:break-word;">@error.ErrorText</p>
+                        <span class="mt-5" style="word-wrap:break-word;">@error.ErrorText</span>
                     </div>
                 }
 
