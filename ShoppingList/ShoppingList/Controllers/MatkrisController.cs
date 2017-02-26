@@ -39,11 +39,13 @@ namespace ShoppingList.Controllers
         [HttpPost]
         public ActionResult foretag(string email, string password)
         {
-            if (dataAccess.ValidateUser(email, password))
+            var businessname = dataAccess.ValidateUser(email, password);
+
+            if (businessname != null)
             {
                 var identity = new ClaimsIdentity(new[] {
                     new Claim(ClaimTypes.Email, email),
-                    new Claim(ClaimTypes.Name, dataAccess.GetBusinessname(email))},
+                    new Claim(ClaimTypes.Name, businessname)},
                     "ApplicationCookie"
                     );
 
@@ -93,7 +95,10 @@ namespace ShoppingList.Controllers
 
                 if (errors.Count == 0)
                 {
-                    // dataAccess.UpdateProductlist(lines, );
+                    var identity = (ClaimsIdentity)User.Identity;
+                    string businessemail = identity.Claims.Where(c => c.Type == ClaimTypes.Email).Select(c => c.Value).SingleOrDefault();
+
+                    dataAccess.UpdateProductlist(lines, businessemail);
                 }
             }
             else
