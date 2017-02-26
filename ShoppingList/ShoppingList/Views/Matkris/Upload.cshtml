@@ -11,7 +11,6 @@
             <div class="row justify-content-md-center">
                 <div class="col-sm-10 col-xs-12">
                     <h2 class="form-signin-heading">Produktlistan</h2>
-                    <h3>Inloggad som @Model.Businessname</h3>
                 </div>
             </div>
 
@@ -65,18 +64,15 @@
             }
 
         }
-        else
-        {
-
-        }
     </div>
 </div>
 
-@*<div class="row">
-        <div class="col-sm-offset-1 col-sm-10 col-xs-12">
-            <div id="responseMessage" class="well">
+<script>
 
-            </div>
-        </div>
-    </div>*@
+    $(document).ready(function () {
+        $('#username').text('@Model.Businessname');
+    });
+
+</script>
+
 
