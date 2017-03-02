@@ -156,12 +156,12 @@
   <ItemGroup>
     <Content Include="Views\web.config" />
     <Content Include="packages.config" />
-    <Content Include="Views\matkrisxx\uppladdning.cshtml" />
+    <Content Include="Views\matkris\uppladdning.cshtml" />
     <Content Include="Scripts\jquery-3.1.1.slim.min.map" />
     <Content Include="Scripts\jquery-3.1.1.min.map" />
-    <Content Include="Views\matkrisxx\meny.cshtml" />
-    <Content Include="Views\matkrisxx\foretag.cshtml" />
-    <Content Include="Views\matkrisxx\_MainLayout.cshtml" />
+    <Content Include="Views\matkris\meny.cshtml" />
+    <Content Include="Views\matkris\foretag.cshtml" />
+    <Content Include="Views\matkris\_MainLayout.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
