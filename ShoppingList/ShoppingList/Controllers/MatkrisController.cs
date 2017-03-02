@@ -24,7 +24,7 @@ namespace ShoppingList.Controllers
         }
 
         [Authorize]
-        public ActionResult upload()
+        public ActionResult uppladdning()
         {
             string businessname = System.Web.HttpContext.Current.GetOwinContext().Authentication.User.Identity.Name;
 
@@ -54,7 +54,7 @@ namespace ShoppingList.Controllers
 
                 authManager.SignIn(identity);
 
-                return RedirectToAction("upload");
+                return RedirectToAction("uppladdning");
             }
             else
             {
@@ -63,7 +63,7 @@ namespace ShoppingList.Controllers
         }
 
         [HttpPost]
-        public ActionResult upload(string emptyParameter)
+        public ActionResult uppladdning(string emptyParameter)
         {
             var file = Request.Files[0];
             List<Error> errors = new List<Error>();
@@ -170,6 +170,13 @@ namespace ShoppingList.Controllers
             authManager.SignOut("ApplicationCookie");
 
             return RedirectToAction("foretag");
+        }
+
+        [HttpPost]
+        public ActionResult search(string searchterm)
+        {
+     
+            return null;
         }
     }
 }

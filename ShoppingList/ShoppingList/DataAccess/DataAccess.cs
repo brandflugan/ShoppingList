@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ShoppingList.Models;
+using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
@@ -36,6 +37,34 @@ namespace ShoppingList.DataAccess
             }
 
             return businessname;
+        }
+
+        public List<Product> GetTopMatchesByName(string term)
+        {
+            List<Product> topProducts = new List<Product>();
+
+            var query = "select top 5 * from Produkter where Produktnamn LIKE '%@term%' ORDER BY CASE " +
+                        "WHEN Produktnamn LIKE '@term%' THEN 1 " +
+                        "ELSE 2 " +
+                        "END ";
+
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                SqlCommand command = new SqlCommand(query, conn);
+                command.Parameters.Add(new SqlParameter("@term", term));
+
+                conn.Open();
+
+                var reader = command.ExecuteReader();
+                while (reader.Read())
+                {
+                    topProducts.Add(new Product { Artikelnummer = reader.GetInt32(0), Produktnamn = reader.GetString(1), Pris = reader.GetDecimal(2), Kategori = reader.GetString(3), Typ = reader.GetString(4), BildURL = reader.GetString(5) });
+                }
+
+                conn.Close();
+            }
+
+            return topProducts;
         }
 
         public void UpdateProductlist(List<string> productlist, string email)

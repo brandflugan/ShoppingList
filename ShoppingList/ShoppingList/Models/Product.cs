@@ -5,7 +5,7 @@ using System.Web;
 
 namespace ShoppingList.Models
 {
-    public class Produkt
+    public class Product
     {
         public int Artikelnummer { get; set; }
         public string Produktnamn { get; set; }

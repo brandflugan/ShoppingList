@@ -162,6 +162,7 @@
     <Content Include="Views\matkris\meny.cshtml" />
     <Content Include="Views\matkris\foretag.cshtml" />
     <Content Include="Views\matkris\_MainLayout.cshtml" />
+    <Content Include="Views\matkris\index.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
