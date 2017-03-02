@@ -18,20 +18,20 @@ namespace ShoppingList.Controllers
         private DataAccess.DataAccess dataAccess = new DataAccess.DataAccess();
 
         // GET: Matkris
-        public ActionResult Index()
+        public ActionResult index()
         {
             return View();
         }
 
         [Authorize]
-        public ActionResult Upload()
+        public ActionResult upload()
         {
             string businessname = System.Web.HttpContext.Current.GetOwinContext().Authentication.User.Identity.Name;
 
             return View(new UploadViewModel { Businessname = businessname });
         }
 
-        public ActionResult Foretag()
+        public ActionResult foretag()
         {
             return View();
         }
@@ -63,7 +63,7 @@ namespace ShoppingList.Controllers
         }
 
         [HttpPost]
-        public ActionResult Upload(string emptyParameter)
+        public ActionResult upload(string emptyParameter)
         {
             var file = Request.Files[0];
             List<Error> errors = new List<Error>();
@@ -162,7 +162,7 @@ namespace ShoppingList.Controllers
         }
 
         [HttpPost]
-        public ActionResult Logout()
+        public ActionResult logout()
         {
             var ctx = Request.GetOwinContext();
             var authManager = ctx.Authentication;
