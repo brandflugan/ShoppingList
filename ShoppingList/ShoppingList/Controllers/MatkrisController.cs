@@ -173,10 +173,13 @@ namespace ShoppingList.Controllers
         }
 
         [HttpPost]
-        public ActionResult search(string searchterm)
+        public JsonResult search(string searchterm)
         {
-     
-            return null;
+            List<Product> productList;
+
+            productList = dataAccess.GetTopMatchesByName(searchterm);
+
+            return Json(productList, JsonRequestBehavior.AllowGet);
         }
     }
 }
