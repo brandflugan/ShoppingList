@@ -101,8 +101,20 @@ namespace ShoppingList.DataAccess
 
                     command = new SqlCommand(query, conn);
 
-                    decimal price = decimal.Parse(details[2].Replace(',', '.'));
-                    decimal jmf = decimal.Parse(details[3].Replace(',', '.'));
+                    decimal price;
+                    decimal jmf;
+                    try
+                    {
+                        string replacePrice = details[2].Replace(',', '.');
+                        string replaceJmf = details[3].Replace(',', '.');
+                        price = decimal.Parse(replacePrice);
+                        jmf = decimal.Parse(replaceJmf);
+                    }
+                    catch (Exception)
+                    {
+                        price = decimal.Parse(details[2]);
+                        jmf = decimal.Parse(details[3]);
+                    }
 
                     command.Parameters.Add(new SqlParameter("artnummer", details[0]));
                     command.Parameters.Add(new SqlParameter("produktnamn", details[1]));
@@ -110,8 +122,6 @@ namespace ShoppingList.DataAccess
                     price = price - (price % 0.01m);
                     jmf = jmf - (jmf % 0.01m);
 
-                    //  decimal jmf = decimal.Parse(price) 
-                    //    decimal pris = Math.Truncate(100 * (decimal.Parse(details[2].Replace(',', '.')) / 100));
                     command.Parameters.Add(new SqlParameter("pris", price));
                     command.Parameters.Add(new SqlParameter("jmf", jmf));
                     command.Parameters.Add(new SqlParameter("kategori", details[4]));
