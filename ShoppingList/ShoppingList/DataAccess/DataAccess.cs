@@ -43,15 +43,15 @@ namespace ShoppingList.DataAccess
         {
             List<Product> topProducts = new List<Product>();
 
-            var query = "select top 5 * from Produkter where Produktnamn LIKE '%@term%' ORDER BY CASE " +
-                        "WHEN Produktnamn LIKE '@term%' THEN 1 " +
+            var query = "select top 5 * from Produkter where Produktnamn LIKE '%" + @term + "%' ORDER BY CASE " +
+                        "WHEN Produktnamn LIKE '" + @term + "%' THEN 1 " +
                         "ELSE 2 " +
                         "END ";
 
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
                 SqlCommand command = new SqlCommand(query, conn);
-                command.Parameters.Add(new SqlParameter("@term", term));
+                command.Parameters.Add(new SqlParameter("term", term));
 
                 conn.Open();
 

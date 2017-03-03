@@ -57,12 +57,17 @@
 
         var searchvalue = $("#searchfield").val();
 
-
-
         $.ajax({
             url: "/matkris/search",
             type: "POST",
-            data: { searchterm: searchvalue }
+            data: { searchterm: searchvalue },
+            success: function (topproducts) {
+                listproducts(topproducts);
+            }
         });
     });
+
+    function listproducts(products) {
+
+    }
 </script>
