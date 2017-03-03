@@ -10,6 +10,7 @@ namespace ShoppingList.Models
         public int Artikelnummer { get; set; }
         public string Produktnamn { get; set; }
         public decimal Pris { get; set; }
+        public decimal JFM { get; set; }
         public string Kategori { get; set; }
         public string Typ { get; set; }
         public string BildURL { get; set; }

@@ -58,7 +58,7 @@ namespace ShoppingList.DataAccess
                 var reader = command.ExecuteReader();
                 while (reader.Read())
                 {
-                    topProducts.Add(new Product { Artikelnummer = reader.GetInt32(0), Produktnamn = reader.GetString(1), Pris = reader.GetDecimal(2), Kategori = reader.GetString(3), Typ = reader.GetString(4), BildURL = reader.GetString(5) });
+                    topProducts.Add(new Product { Artikelnummer = reader.GetInt32(0), Produktnamn = reader.GetString(1), Pris = reader.GetDecimal(2), JFM = reader.GetDecimal(3), Kategori = reader.GetString(4), Typ = reader.GetString(5), BildURL = reader.GetString(6) });
                 }
 
                 conn.Close();
@@ -89,14 +89,14 @@ namespace ShoppingList.DataAccess
 
                     if (count > 0)
                     {
-                        query = "UPDATE Produkter SET Artikelnummer = @artnummer, Produktnamn = @produktnamn, Pris = @pris, Kategori = @kategori, Typ = @typ, BildURL = @bildURL " +
+                        query = "UPDATE Produkter SET Artikelnummer = @artnummer, Produktnamn = @produktnamn, Pris = @pris, Jamforelsepris = @jmf, Kategori = @kategori, Typ = @typ, BildURL = @bildURL " +
                             "WHERE Artikelnummer = @artnummer AND Foretagsepost = @epost";
                     }
                     else
                     {
 
-                        query = "INSERT INTO Produkter(Artikelnummer, Produktnamn, Pris, Kategori, Typ, BildURL, Foretagsepost) " +
-                            "VALUES(@artnummer, @produktnamn, @pris, @kategori, @typ, @bildURL, @epost)";
+                        query = "INSERT INTO Produkter(Artikelnummer, Produktnamn, Pris, , Jameforselspris, Kategori, Typ, BildURL, Foretagsepost) " +
+                            "VALUES(@artnummer, @produktnamn, @pris, @jmf, @kategori, @typ, @bildURL, @epost)";
                     }
 
                     command = new SqlCommand(query, conn);
@@ -104,9 +104,10 @@ namespace ShoppingList.DataAccess
                     command.Parameters.Add(new SqlParameter("artnummer", details[0]));
                     command.Parameters.Add(new SqlParameter("produktnamn", details[1]));
                     command.Parameters.Add(new SqlParameter("pris", details[2].Replace(',', '.')));
-                    command.Parameters.Add(new SqlParameter("kategori", details[3]));
-                    command.Parameters.Add(new SqlParameter("typ", details[4]));
-                    command.Parameters.Add(new SqlParameter("bildURL", details[5]));
+                    command.Parameters.Add(new SqlParameter("jmf", details[3].Replace(',', '.')));
+                    command.Parameters.Add(new SqlParameter("kategori", details[4]));
+                    command.Parameters.Add(new SqlParameter("typ", details[5]));
+                    command.Parameters.Add(new SqlParameter("bildURL", details[6]));
                     command.Parameters.Add(new SqlParameter("epost", email));
 
                     command.ExecuteNonQuery();
