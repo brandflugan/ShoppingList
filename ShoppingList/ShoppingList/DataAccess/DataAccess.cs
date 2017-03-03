@@ -95,7 +95,7 @@ namespace ShoppingList.DataAccess
                     else
                     {
 
-                        query = "INSERT INTO Produkter(Artikelnummer, Produktnamn, Pris, , Jameforselspris, Kategori, Typ, BildURL, Foretagsepost) " +
+                        query = "INSERT INTO Produkter(Artikelnummer, Produktnamn, Pris, Jamforelsepris, Kategori, Typ, BildURL, Foretagsepost) " +
                             "VALUES(@artnummer, @produktnamn, @pris, @jmf, @kategori, @typ, @bildURL, @epost)";
                     }
 
