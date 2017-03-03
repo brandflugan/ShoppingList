@@ -113,7 +113,7 @@ namespace ShoppingList.Controllers
 
         private void ValidateProductlist(List<string> productlist, ref List<Error> errorlist)
         {
-            if (productlist[0].ToLower() != ("Artnummer;Produktnamn;Pris;kategori;typ;Bild-URL").ToLower())
+            if (productlist[0].ToLower() != ("Artnummer;Produktnamn;Pris;jmf;kategori;typ;Bild-URL").ToLower())
             {
                 errorlist.Add(new Error(1, "Första raden på prisfilen är ej korrekt formatterad. Se exempel för hur raden ska se ut."));
             }
@@ -125,7 +125,7 @@ namespace ShoppingList.Controllers
                     var details = productlist[i].Split(';');
                     var error = "";
 
-                    if (details.Length != 6)
+                    if (details.Length != 7)
                     {
                         error += "Raden innehåller inte korrekt antal fält. \n";
                     }
@@ -149,6 +149,11 @@ namespace ShoppingList.Controllers
                         if (!decimal.TryParse(details[2], out dvalue))
                         {
                             error += "Fältet Pris är inte ett belopp: " + details[2] + ". \n";
+                        }
+
+                        if (!decimal.TryParse(details[3], out dvalue))
+                        {
+                            error += "Fältet jmf är inte ett belopp: " + details[2] + ". \n";
                         }
 
                     }
