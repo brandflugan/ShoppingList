@@ -13,7 +13,7 @@
                 <div class="row justify-content-md-center">
                     <div class="col-sm-9 col-xs-12">
                         <div class="input-group">
-                            <input type="text" class="form-control" placeholder="Search for..." id="searchfield">
+                            <input type="text" class="form-control no-fixed-height" placeholder="Sök efter produkter..." id="searchfield">
                             <div class="input-group-btn">
                                 <button class="btn btn-default" disabled style="cursor:default">
                                     <span class="glyphicon glyphicon-search">
@@ -26,21 +26,22 @@
 
                 <div class="row justify-content-md-center">
                     <div class="col-sm-9 col-xs-12">
-                        <ul class="list-group flex-container">
-                            <li class="list-group-item justify-content-between flex-item">
-                                <a href="https://d1hr6nb56yyl1.cloudfront.net/product-images/7912-150.jpg"></a>
+                        <ul class="list-group flex-container list-special">
+                            <li class="list-group-item justify-content-between flex-item clearfix">
+                                <img class="img-responsive" src="https://d1hr6nb56yyl1.cloudfront.net/product-images/7912-150.jpg" />
                             </li>
-                            <li class="list-group-item justify-content-between flex-item">
+                            <li class="list-group-item justify-content-between flex-item clearfix">
                                 Oregano Santa Maria, 5 g
                             </li>
-                            <li class="list-group-item justify-content-between flex-item">
-                                32,95
+                            <li class="list-group-item justify-content-between flex-item clearfix">
+                                <span class="text-primary dp-block">32,95:-</span>
+                                <span class="text-muted small">jmf.pris: 3650:-/kg</span>
                             </li>
-                            <li class="list-group-item justify-content-between flex-item">
-                                <input type="number" value="0" />
+                            <li class="list-group-item justify-content-between flex-item clearfix">
+                                <input class="form-control" type="number" value="0" />
                             </li>
-                            <li class="list-group-item justify-content-between flex-item">
-                                <button class="btn btn-default">Lägg till</button>
+                            <li class="list-group-item justify-content-between flex-item clearfix">
+                                <input type="button" class="btn btn-default" value="Lägg till" />
                             </li>
                         </ul>
                     </div>

@@ -6,6 +6,11 @@
     margin-top: 5px;
 }
 
+.dp-block {
+    display: block;
+    line-height: 15px;
+}
+
 .btn-file {
     position: relative;
     overflow: hidden;
@@ -74,6 +79,10 @@
     margin-bottom: 15px;
 }
 
+.no-fixed-height {
+    height: initial !important;
+}
+
 .flex-container {
     display: flex;
     flex-direction: row;
@@ -85,7 +94,7 @@
 
 .flex-item:nth-child(1) {
     order: 0;
-    flex: 0 1 auto;
+    flex: 0 0 67px;
     align-self: auto;
     }
 
@@ -103,7 +112,7 @@
 
 .flex-item:nth-child(4) {
     order: 0;
-    flex: 1 1 auto;
+    flex: 0 0 100px;
     align-self: auto;
     }
 
@@ -112,6 +121,22 @@
     flex: 0 1 auto;
     align-self: auto;
     }
+
+.list-special .list-group-item:first-child {
+  border-top-left-radius: 4px !important;
+  border-bottom-left-radius: 4px !important;
+  border-top-right-radius: 0px !important;
+}
+
+.list-special .list-group-item:last-child {
+  border-bottom-right-radius: 4px !important;
+  border-top-right-radius: 4px !important;
+  border-bottom-left-radius: 0px !important;
+}
+
+.list-special .list-group-item {
+    margin-bottom: 0px !important;
+}
 
 .row.row-grid [class*="col-"] + [class*="col-"] {
     margin-top: 15px;
