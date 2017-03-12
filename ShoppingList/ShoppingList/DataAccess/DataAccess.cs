@@ -58,7 +58,20 @@ namespace ShoppingList.DataAccess
                 var reader = command.ExecuteReader();
                 while (reader.Read())
                 {
-                    topProducts.Add(new Product { Artikelnummer = reader.GetInt32(0), Produktnamn = reader.GetString(1), Pris = reader.GetDecimal(2), JFM = reader.GetDecimal(3), Kategori = reader.GetString(4), Typ = reader.GetString(5), BildURL = reader.GetString(6) });
+                    //Product product = new Product();
+                    //product.Artikelnummer = reader.GetInt32(0);
+                    //product.Produktnamn = reader.GetString(1);
+                    //var pris = reader.GetValue(2).ToString();
+
+                    //product.Pris = reader.GetDecimal(2);
+                    //product.Jmf = reader.GetDecimal(3);
+                    //product.Kategori = reader.GetString(4);
+                    //product.Typ = reader.GetString(5);
+                    //product.BildURL = reader.GetString(6);
+
+                    //topProducts.Add(product);
+
+                    topProducts.Add(new Product { Artikelnummer = reader.GetInt32(0), Produktnamn = reader.GetString(1), Pris = reader.GetDecimal(6), Jmf = reader.GetDecimal(7), Kategori = reader.GetString(2), Typ = reader.GetString(3), BildURL = reader.GetString(4) });
                 }
 
                 conn.Close();
