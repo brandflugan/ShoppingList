@@ -12,7 +12,7 @@
         <center>
             <div class="navbar-collapse collapse" id="navbar-main">
                 <ul class="nav navbar-nav">
-                    <li class="menu-item-click @if (Request.RawUrl.ToLower().Contains("privat")) {<text>active</text> }" id="menu-state-private"><a href="privat">Privat</a></li>
+                    <li class="menu-item-click @if (Request.RawUrl.ToLower().Contains("index")) {<text>active</text> }" id="menu-state-private"><a href="index">Hem</a></li>
                     <li class="menu-item-click @if (Request.RawUrl.ToLower().Contains("foretag") || Request.RawUrl.ToLower().Contains("uppladdning")) {<text>active</text> }" id="menu-state-business"><a href="foretag">Företag</a></li>
                 </ul>
                 @if (Request.RawUrl.ToLower().Contains("matkris/uppladdning"))
