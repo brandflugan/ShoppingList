@@ -45,88 +45,67 @@
 
 <script>
     (function () {
-        var search = { // Begin scoping function
-            searchList: {},
+        var searchList = {};
 
-            addProductToCheckout: function (searchIndex) {
-                $('#checkout-wrapper').show();
-                var prod = this.searchList[searchIndex];
-                $('.checkout-list').append
+        function addProductToCheckout(searchIndex) {
+            var prod = searchList[searchIndex];
+            alert(prod.Produktnamn);
+        };
+
+        function listProducts() {
+
+            $('#product-search').html('');
+            for (i = 0; i < searchList.length; i++) {
+                $('#product-search').append
                     (
-                        '<ul class="checkout-flex-container list-group">' +
-                            '<li class="checkout-product-name checkout-flex-item list-group-item justify-content-between clearfix">' +
-                                prod.Produktnamn +
-                            '</li>' +
-                            '<li class="checkout-flex-item list-group-item justify-content-between clearfix">' +
-                                '<input class="form-control" type="number" min="1" max="99" value="1" />' +
-                                '<span class="text-right text-muted"> st</span>' +
-                            '</li>' +
-                            '<li class="checkout-flex-item list-group-item justify-content-between clearfix">' +
-                                '<button type="button" class="checkout-btn-remove btn btn-default btn-no-padding">' +
-                                    '<small><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></small>' +
-                                '</button>' +
-                            '</li>' +
+                        '<ul class="list-group flex-container list-special">' +
+                        ' <li class="list-group-item justify-content-between flex-item clearfix"> ' +
+                            '<img class="product-image img-responsive" src="' + searchList[i].BildURL + '" />' +
+                            '<div class="pull-right mobile-version">' +
+                                '<p class="product-name text-right">' + searchList[i].Produktnamn + '</p>' +
+                                '<p class="product-price text-right text-primary dp-block">' + searchList[i].Pris + '<span>:-</span></p>' +
+                                '<p class="text-right text-muted small">jmf.pris: <span class="product-jmf">' + searchList[i].Jmf + '</span>:-/kg</p>' +
+                            '</div>' +
+                        '</li>' +
+                        '<li class="product-name list-group-item justify-content-between flex-item clearfix">' + searchList[i].Produktnamn + '</li>' +
+                        '<li class="list-group-item justify-content-between flex-item clearfix">' +
+                            '<span class="product-price text-primary dp-block">' + searchList[i].Pris + ':-</span>' +
+                            '<span class="product-jmf text-muted small">jmf.pris: <span class="product-jmf">' + searchList[i].Jmf + '</span>:-/kg</span>' +
+                        '</li>' +
+                        '<li class="list-group-item justify-content-between flex-item clearfix">' +
+                            '<input class="product-count form-control" type="number" min="1" max="99" value="1" />' +
+                            '<span class="text-right text-muted">st</span>' +
+                        '</li>' +
+                        '<li class="list-group-item justify-content-between flex-item clearfix">' +
+                            '<input id="product-id-' + i + '" class="product-btn-add btn btn-default" type="button" value="Lägg till" />' +
+                        '</li>' +
                         '</ul>'
-                    );
-            },
+                    )
+            }
 
-            listProducts: function (searchList) {
-                var self = this;
+            $(".product-btn-add").on("click", function () {
+                var index = this.id.charAt(this.id.length - 1);
 
-                $('#product-search').html('');
-                for (i = 0; i < searchList.length; i++) {
-                    $('#product-search').append
-                        (
-                            '<ul class="list-group flex-container list-special">' +
-                            ' <li class="list-group-item justify-content-between flex-item clearfix"> ' +
-                                '<img class="product-image img-responsive" src="' + searchList[i].BildURL + '" />' +
-                                '<div class="pull-right mobile-version">' +
-                                    '<p class="product-name text-right">' + searchList[i].Produktnamn + '</p>' +
-                                    '<p class="product-price text-right text-primary dp-block">' + searchList[i].Pris + '<span>:-</span></p>' +
-                                    '<p class="text-right text-muted small">jmf.pris: <span class="product-jmf">' + searchList[i].Jmf + '</span>:-/kg</p>' +
-                                '</div>' +
-                            '</li>' +
-                            '<li class="product-name list-group-item justify-content-between flex-item clearfix">' + searchList[i].Produktnamn + '</li>' +
-                            '<li class="list-group-item justify-content-between flex-item clearfix">' +
-                                '<span class="product-price text-primary dp-block">' + searchList[i].Pris + ':-</span>' +
-                                '<span class="product-jmf text-muted small">jmf.pris: <span class="product-jmf">' + searchList[i].Jmf + '</span>:-/kg</span>' +
-                            '</li>' +
-                            '<li class="list-group-item justify-content-between flex-item clearfix">' +
-                                '<input class="product-count form-control" type="number" min="1" max="99" value="1" />' +
-                                '<span class="text-right text-muted"> st</span>' +
-                            '</li>' +
-                            '<li class="list-group-item justify-content-between flex-item clearfix">' +
-                                '<input id="product-id-' + i + '" class="product-btn-add btn btn-default" type="button" value="Lägg till" />' +
-                            '</li>' +
-                            '</ul>'
-                        )
+                addProductToCheckout(index);
+            })
+        };
+
+        function searchProducts() {
+            var searchvalue = $("#searchfield").val();
+
+            $.ajax({
+                url: "/matkris/search",
+                type: "POST",
+                data: { searchterm: searchvalue },
+                success: function (toproducts) {
+                    searchList = toproducts;
+                    listProducts();
                 }
-
-                $(".product-btn-add").on("click", function () {
-                    var index = this.id.charAt(this.id.length - 1);
-
-                    self.addProductToCheckout(index);
-                })
-            },
-
-            searchProducts: function () {
-                var searchvalue = $("#searchfield").val();
-                var self = this;
-
-                $.ajax({
-                    url: "/matkris/search",
-                    type: "POST",
-                    data: { searchterm: searchvalue },
-                    success: function (toproducts) {
-                        self.searchList = toproducts;
-                        self.listProducts(self.searchList);
-                    }
-                });
-            },
-        }
+            });
+        };
 
         $("#searchfield").on("keyup", function (e) {
-            search.searchProducts();
+            searchProducts();
         });
     })();
 </script>
