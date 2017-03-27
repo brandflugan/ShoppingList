@@ -26,6 +26,8 @@ namespace ShoppingList.Controllers
         [HttpPost]
         public ActionResult index(List<Product> products)
         {
+            products = products.Where(p => p != null).ToList();
+
             var suppliers = dataAccess.MatchSuppliersWithProducts(products);
 
             Score.CalculateScore(suppliers, products);
