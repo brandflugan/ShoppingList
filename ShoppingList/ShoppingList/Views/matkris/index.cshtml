@@ -36,12 +36,20 @@
 <script>
     (function () {
         var searchList = {};
-        var checkoutList = [];
+        var productCount = 0;
 
-        function addProductToCheckout(searchIndex) {
+        function addProductToCheckout(searchIndex, amount) {
+            if (amount < 0) {
+                alert("Ange ett antal större än 0!");
+                return;
+            }
+
             var prod = searchList[searchIndex];
+            prod.Antal = amount;
 
-            checkoutList.push(prod);
+            addProductToCheckoutForm(prod, productCount);
+
+            productCount++;
 
             $('#checkout-list').append
                 (
@@ -61,6 +69,11 @@
                     '</ul>'
                 );
         };
+
+        function addProductToCheckoutForm(product, index) {
+            $("#checkoutForm").append('<input name="products[' + index + '].Artikelnummer" value="' + product.Artikelnummer + '" type="hidden"/>');
+            $("#checkoutForm").append('<input name="products[' + index + '].Antal" value="' + product.Antal + '" type="hidden"/>');
+        }
 
         function listProducts() {
 
@@ -97,8 +110,7 @@
                 var index = this.id.charAt(this.id.length - 1);
                 var amount = $('#product-count-id-' + index).val();
                 $('#dropdown-item-count').text(parseInt($('#dropdown-item-count').text()) + parseInt(amount));
-                alert(amount);
-                addProductToCheckout(index);
+                addProductToCheckout(index, amount);
             })
         };
 

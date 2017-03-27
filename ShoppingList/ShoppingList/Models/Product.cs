@@ -15,5 +15,6 @@ namespace ShoppingList.Models
         public string Typ { get; set; }
         public string BildURL { get; set; }
         public bool Match { get; set; }
+        public int Antal { get; set; }
     }
 }

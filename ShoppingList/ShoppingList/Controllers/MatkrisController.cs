@@ -24,12 +24,17 @@ namespace ShoppingList.Controllers
         }
 
         [HttpPost]
-        public ActionResult index(string empty)
+        public ActionResult index(List<Product> products)
         {
-            var suppliers = dataAccess.MatchSuppliersWithProducts(null);
+            var suppliers = dataAccess.MatchSuppliersWithProducts(products);
 
-            Score.CalculateScore(suppliers, null);
+            Score.CalculateScore(suppliers, products);
 
+            return View();
+        }
+
+        public ActionResult resultat()
+        {
             return View();
         }
 
