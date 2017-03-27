@@ -36,9 +36,13 @@
 <script>
     (function () {
         var searchList = {};
+        var checkoutList = [];
 
         function addProductToCheckout(searchIndex) {
             var prod = searchList[searchIndex];
+
+            checkoutList.push(prod);
+
             $('#checkout-list').append
                 (
                     '<ul class="checkout-flex-container list-group">' +
