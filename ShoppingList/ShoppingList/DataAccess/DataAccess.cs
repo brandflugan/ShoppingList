@@ -148,5 +148,48 @@ namespace ShoppingList.DataAccess
                 }
             }
         }
+
+        public List<Supplier> MatchSuppliersWithProducts(List<Product> checkoutList)
+        {
+            var query = "SELECT Foretagsnamn, Epost From Foretag";
+            List<Supplier> suppliers = new List<Supplier>();
+
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                SqlCommand command = new SqlCommand(query, conn);
+
+                conn.Open();
+                SqlDataReader reader = command.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    suppliers.Add(new Supplier { Name = reader.GetString(0), Email = reader.GetString(1) });
+                }
+
+                conn.Close();
+
+                foreach (var product in checkoutList)
+                {
+                    foreach (var supplier in suppliers)
+                    {
+                        query = "SELECT FIRST() Pris From Produkter WHERE Produktnamn = @produktnamn AND Foretagsepost = @email";
+                        command = new SqlCommand(query, conn);
+
+                        conn.Open();
+                        reader = command.ExecuteReader();
+
+                        while (reader.Read())
+                        {
+                            Product prod = new Product { Pris = reader.GetDecimal(0), Match = true } ?? new Product { Match = false };
+                            supplier.Products.Add(prod);
+                        }
+
+                        conn.Close();
+                    }
+                }
+            }
+
+            return suppliers;
+        }
     }
 }

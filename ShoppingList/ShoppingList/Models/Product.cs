@@ -14,5 +14,6 @@ namespace ShoppingList.Models
         public string Kategori { get; set; }
         public string Typ { get; set; }
         public string BildURL { get; set; }
+        public bool Match { get; set; }
     }
 }

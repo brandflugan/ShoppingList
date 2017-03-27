@@ -150,6 +150,8 @@
     </Compile>
     <Compile Include="Models\Error.cs" />
     <Compile Include="Models\Product.cs" />
+    <Compile Include="Models\Score.cs" />
+    <Compile Include="Models\Supplier.cs" />
     <Compile Include="Models\UploadViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
