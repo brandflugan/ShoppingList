@@ -23,6 +23,16 @@ namespace ShoppingList.Controllers
             return View();
         }
 
+        [HttpPost]
+        public ActionResult index(string empty)
+        {
+            var suppliers = dataAccess.MatchSuppliersWithProducts(null);
+
+            Score.CalculateScore(suppliers, null);
+
+            return View();
+        }
+
         [Authorize]
         public ActionResult uppladdning()
         {
@@ -75,7 +85,6 @@ namespace ShoppingList.Controllers
 
                 using (StreamReader reader = new StreamReader(file.InputStream, Encoding.UTF8))
                 {
-                    UTF8Encoding ascii = new UTF8Encoding();
                     string line;
 
                     while ((line = reader.ReadLine()) != null)
