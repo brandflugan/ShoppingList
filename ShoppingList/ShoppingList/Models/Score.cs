@@ -42,7 +42,7 @@ namespace ShoppingList.Models
             {
                 foreach (var prod in supp.Products)
                 {
-                    supp.TotalCost += prod.Pris;
+                    supp.TotalCost += prod.Pris * prod.Antal;
                 }
             }
 
