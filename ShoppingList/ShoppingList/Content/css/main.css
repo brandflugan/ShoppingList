@@ -37,6 +37,10 @@ ul.dropdown-cart {
     padding: 10px;
 }
 
+.overflow {
+    overflow: auto;
+}
+
 .panel-heading a:after {
     font-family: 'Glyphicons Halflings';
     content: "\e114";
@@ -297,19 +301,19 @@ ul.dropdown-cart {
         align-self: auto;
     }
 
-    .flex-item:nth-child(2) {
-        display: inline;
-        order: 0;
-        flex: 1 1 100px;
-        align-self: auto;
-    }
+.flex-item:nth-child(2) {
+    display: inline;
+    order: 0;
+    align-self: auto;
+    width: 100%;
+}
 
-    .flex-item:nth-child(3) {
-        display: inline;
-        order: 0;
-        flex: 0 1 auto;
-        align-self: auto;
-    }
+.flex-item:nth-child(3) {
+    display: inline;
+    order: 0;
+    flex: 0 0 90px;
+    align-self: auto;
+}
 
     .flex-item:nth-child(4) {
         order: 0;

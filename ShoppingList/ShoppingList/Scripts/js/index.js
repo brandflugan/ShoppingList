@@ -91,6 +91,7 @@
             success: function (toproducts) {
                 searchList = toproducts;
                 listProducts();
+                $('#product-search').show();
             }
         });
     };
@@ -98,6 +99,8 @@
     $("#searchfield").on("keyup", function (e) {
         if ($("#searchfield").val().length > 1) {
             searchProducts();
+        } else {
+            $('#product-search').hide();
         }
     });
 
