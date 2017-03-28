@@ -315,7 +315,7 @@ ul.dropdown-cart {
 .flex-item:nth-child(3) {
     display: inline;
     order: 0;
-    flex: 0 0 90px;
+    flex: 0 0 135px;
     align-self: auto;
 }
 
