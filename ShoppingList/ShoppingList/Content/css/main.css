@@ -11,6 +11,10 @@
     line-height: 15px;
 }
 
+.dropdown .disabled {
+    cursor: default !important;
+}
+
 .btn-file {
     position: relative;
     overflow: hidden;
