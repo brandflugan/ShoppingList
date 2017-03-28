@@ -10,7 +10,7 @@ namespace ShoppingList.Models
         public string Name { get; set; }
         public string Email { get; set; }
         public List<Product> Products { get; set; } = new List<Product>();
-        public int Score { get; set; }
+        public decimal TotalCost { get; set; }
         public Product ActiveProduct { get; set; }
     }
 }

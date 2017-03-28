@@ -70,7 +70,6 @@
                 )
         }
 
-
         $(".product-btn-add").on("click", function () {
             var index = this.id.charAt(this.id.length - 1);
             var amount = $('#product-count-id-' + index).val();
@@ -97,7 +96,9 @@
     };
 
     $("#searchfield").on("keyup", function (e) {
-        searchProducts();
+        if ($("#searchfield").val().length > 1) {
+            searchProducts();
+        }
     });
 
     $(document).on('click', '.checkout-btn-remove', function (e) {

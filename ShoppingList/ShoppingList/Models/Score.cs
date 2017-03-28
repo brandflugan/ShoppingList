@@ -21,17 +21,32 @@ namespace ShoppingList.Models
                 {
                     if (i > 1)
                     {
-                        if (suppliers[i - 2].ActiveProduct.Pris * 0.02m < suppliers[i - 1].ActiveProduct.Pris)
+                        if (suppliers[i - 2].ActiveProduct.Pris * 1.02m < suppliers[i - 1].ActiveProduct.Pris)
                         {
                             score++;
                         }
                     }
 
-                    suppliers[i - 1].Score += score;
+                    suppliers[i - 1].TotalCost += score;
                 }
             }
 
-            suppliers.Sort((s1, s2) => s1.Score.CompareTo(s2.Score));
+            suppliers.Sort((s1, s2) => s1.TotalCost.CompareTo(s2.TotalCost));
+
+            return suppliers;
+        }
+
+        public static List<Supplier> AddProductPrices(List<Supplier> suppliers)
+        {
+            foreach (var supp in suppliers)
+            {
+                foreach (var prod in supp.Products)
+                {
+                    supp.TotalCost += prod.Pris;
+                }
+            }
+
+            suppliers.Sort((s1, s2) => s1.TotalCost.CompareTo(s2.TotalCost));
 
             return suppliers;
         }

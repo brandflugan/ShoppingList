@@ -32,17 +32,20 @@ namespace ShoppingList.Controllers
 
                 var suppliers = dataAccess.MatchSuppliersWithProducts(products);
 
-                Score.CalculateScore(suppliers, products);
+                Score.AddProductPrices(suppliers);
 
                 //Vi går vidare till rätt View här
-                return RedirectToAction("/resultat", suppliers);
+                return View("resultat", suppliers);
             }
             return RedirectToAction("/index");
         }
 
-        public ActionResult resultat()
+        public ActionResult resultat(List<Supplier> suppliers = null)
         {
-            return View();
+            if(suppliers == null)
+                return RedirectToAction("/index");
+            else 
+                return View(suppliers);
         }
 
         [Authorize]
