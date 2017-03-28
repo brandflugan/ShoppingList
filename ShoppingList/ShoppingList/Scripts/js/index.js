@@ -3,24 +3,37 @@
     var indexCounter = 0;
 
     function addProductToCheckout(searchIndex, amount) {
-        if (amount < 0) {
+        if (amount < 1) {
             alert("Ange ett antal större än 0!");
             return;
         }
 
+        $('#dropdown-item-count').text(parseInt($('#dropdown-item-count').text()) + parseInt(amount));
+
         var prod = searchList[searchIndex];
         prod.Antal = amount;
 
+        var exists = productExists(prod.Artikelnummer);
+
+        if (exists) {
+            addExisting(prod);
+        }
+        else {
+            addNew(prod);
+        }
+    };
+
+    function addNew(prod) {
         addProductToCheckoutForm(prod, indexCounter);
 
         $('#checkout-list').append
             (
-                '<ul class="checkout-flex-container list-group">' +
+                '<ul id="checkout-product-id-' + prod.Artikelnummer + '" class="checkout-flex-container list-group">' +
                     '<li class="checkout-product-name checkout-flex-item list-group-item justify-content-between clearfix">' +
                         prod.Produktnamn +
                     '</li>' +
                     '<li class="checkout-flex-item list-group-item justify-content-between clearfix">' +
-                        '<input class="form-control" type="number" min="1" max="99" value="' + prod.Antal + '" />' +
+                        '<input class="form-control checkout-input" type="number" min="1" max="99" value="' + prod.Antal + '" />' +
                         '<span class="text-right text-muted"> st</span>' +
                     '</li>' +
                     '<li class="checkout-flex-item list-group-item justify-content-between clearfix">' +
@@ -32,7 +45,31 @@
             );
 
         indexCounter++;
-    };
+    }
+
+    function addExisting(prod) {
+        var id = $("#checkout-product-id-" + prod.Artikelnummer + " button").attr("id")
+        var index = id.charAt(id.length - 1);
+
+        var currentValue = parseInt($("#checkout-product-id-" + prod.Artikelnummer).find("input").val());
+        var currentFormValue = parseInt($("#checkout-form [name='products[" + index + "].Antal']").val());
+
+        $("#checkout-product-id-" + prod.Artikelnummer).find("input").val(currentValue + parseInt(prod.Antal));
+
+        $("#checkout-form [name='products[" + index + "].Antal']").val(currentFormValue + parseInt(prod.Antal));
+    }
+
+    function productExists(artnummer) {
+        var exist = false;
+
+        $("li ul").each(function () {
+            var id = this.id.substring(this.id.length - 4, this.id.length);
+            if (artnummer == id) {
+                exist = true;
+            }
+        });
+        return exist;
+    }
 
     function addProductToCheckoutForm(product, index) {
         $("#checkout-form").append('<input class="hidden-product-index-' + index + '" name="products[' + index + '].Artikelnummer" value="' + product.Artikelnummer + '" type="hidden"/>');
@@ -73,7 +110,6 @@
         $(".product-btn-add").on("click", function () {
             var index = this.id.charAt(this.id.length - 1);
             var amount = $('#product-count-id-' + index).val();
-            $('#dropdown-item-count').text(parseInt($('#dropdown-item-count').text()) + parseInt(amount));
             addProductToCheckout(index, amount);
             if ($("ul .dropdown").hasClass("disabled")) {
                 $("ul .dropdown").removeClass("disabled");
@@ -101,18 +137,28 @@
         }
     });
 
-    $(document).on('click', '.checkout-btn-remove', function (e) {
+    $("#checkout-list").on('click', '.checkout-btn-remove', function (e) {
         $(this).closest("ul").remove();
         $('#dropdown-item-count').text(parseInt($('#dropdown-item-count').text()) - 1);
         var index = this.id.charAt(this.id.length - 1);
         $(".hidden-product-index-" + index).remove();
         if (parseInt($('#dropdown-item-count').text()) < 1) {
             $("ul .dropdown").addClass("disabled");
-
         }
         else {
             e.stopPropagation();
         }
+    });
+
+    $("#checkout-list").on('change', '.checkout-input', function (e) {
+        var id = $(this).closest("ul").attr("id");
+
+        var index = $("#checkout-product-id-" + (id.substring(id.length - 4, id.length)) + " button").attr("id");
+        index = index.charAt(index.length-1);
+
+        var currentFormValue = parseInt($("#checkout-form [name='products[" + index + "].Antal']").val());
+
+        $("#checkout-form [name='products[" + index + "].Antal']").val(parseInt($(this).val()));
     });
 
 })();
