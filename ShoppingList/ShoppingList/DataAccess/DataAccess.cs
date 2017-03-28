@@ -172,7 +172,7 @@ namespace ShoppingList.DataAccess
                 {
                     foreach (var supplier in suppliers)
                     {
-                        query = "SELECT FIRST() Pris From Produkter WHERE Artikelnummer = @artikelnummer AND Foretagsepost = @email";
+                        query = "SELECT TOP 1 Pris From Produkter WHERE Artikelnummer = @artikelnummer AND Foretagsepost = @email";
                         command = new SqlCommand(query, conn);
                         command.Parameters.Add(new SqlParameter("artikelnummer", product.Artikelnummer));
                         command.Parameters.Add(new SqlParameter("email", supplier.Email));

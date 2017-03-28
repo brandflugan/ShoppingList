@@ -26,13 +26,18 @@ namespace ShoppingList.Controllers
         [HttpPost]
         public ActionResult index(List<Product> products)
         {
-            products = products.Where(p => p != null).ToList();
+            if (!products.Any(p => p.Antal < 1 || p.Antal > 99))
+            {
+                products = products.Where(p => p != null).ToList();
 
-            var suppliers = dataAccess.MatchSuppliersWithProducts(products);
+                var suppliers = dataAccess.MatchSuppliersWithProducts(products);
 
-            Score.CalculateScore(suppliers, products);
+                Score.CalculateScore(suppliers, products);
 
-            return View();
+                //Vi går vidare till rätt View här
+                return RedirectToAction("/resultat", suppliers);
+            }
+            return RedirectToAction("/index");
         }
 
         public ActionResult resultat()
@@ -71,11 +76,11 @@ namespace ShoppingList.Controllers
 
                 authManager.SignIn(identity);
 
-                return RedirectToAction("uppladdning");
+                return RedirectToAction("/uppladdning");
             }
             else
             {
-                return RedirectToAction("foretag");
+                return RedirectToAction("/foretag");
             }
         }
 
@@ -190,7 +195,7 @@ namespace ShoppingList.Controllers
 
             authManager.SignOut("ApplicationCookie");
 
-            return RedirectToAction("foretag");
+            return RedirectToAction("/foretag");
         }
 
         [HttpPost]
