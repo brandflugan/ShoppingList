@@ -23,6 +23,11 @@ namespace ShoppingList.Controllers
             return View();
         }
 
+        public ActionResult resultat()
+        {
+            return View(new List<Supplier>());
+        }
+
         [HttpPost]
         public ActionResult resultat(List<Product> products)
         {

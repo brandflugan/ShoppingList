@@ -8,8 +8,6 @@
             return;
         }
 
-        //$('#dropdown-item-count').text(parseInt($('#dropdown-item-count').text()) + parseInt(amount));
-
         var prod = searchList[searchIndex];
         prod.Antal = amount;
 
@@ -144,7 +142,7 @@
         var id = $(this).closest("ul").attr("id");
         var artNumber = id.substring(id.length - 4, id.length);
         var amount = $("#checkout-product-id-" + artNumber).find("input").val();
-        //$('#dropdown-item-count').text(parseInt($('#dropdown-item-count').text()) - amount);
+        indexCounter--;
         $(".hidden-product-index-" + index).remove();
         $(this).closest("ul").remove();
         updateShoppingCart();
