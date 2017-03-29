@@ -43,10 +43,9 @@ namespace ShoppingList.DataAccess
         {
             List<Product> topProducts = new List<Product>();
 
-            var query = "select top 5 * from Produkter where Produktnamn LIKE '%" + @term + "%' ORDER BY CASE " +
-                        "WHEN Produktnamn LIKE '" + @term + "%' THEN 1 " +
-                        "ELSE 2 " +
-                        "END ";
+            var query = "SELECT TOP 5 Produkter.Artikelnummer, min(Produktnamn), min(Pris), min(Jamforelsepris), min(Kategori), " +
+                "min(Typ), min(BildURL)  FROM Produkter INNER JOIN Priser ON Produkter.Artikelnummer = Priser.Artikelnummer " +
+                "WHERE Produktnamn LIKE '%" + @term + "%' GROUP BY Produkter.Artikelnummer";
 
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
@@ -58,7 +57,7 @@ namespace ShoppingList.DataAccess
                 var reader = command.ExecuteReader();
                 while (reader.Read())
                 {
-                    topProducts.Add(new Product { Artikelnummer = reader.GetInt32(0), Produktnamn = reader.GetString(1), Pris = reader.GetDecimal(6), Jmf = reader.GetDecimal(7), Kategori = reader.GetString(2), Typ = reader.GetString(3), BildURL = reader.GetString(4) });
+                    topProducts.Add(new Product { Artikelnummer = reader.GetInt32(0), Produktnamn = reader.GetString(1), Pris = reader.GetDecimal(2), Jmf = reader.GetDecimal(3), Kategori = reader.GetString(4), Typ = reader.GetString(5), BildURL = reader.GetString(6) });
                 }
 
                 conn.Close();
@@ -75,7 +74,10 @@ namespace ShoppingList.DataAccess
             {
                 var details = product.Split(';');
 
-                var query = "SELECT COUNT(*) FROM Produkter INNER JOIN Foretag ON Foretagsepost = Epost WHERE Epost = @epost AND Artikelnummer = @artnummer";
+                //var query = "SELECT COUNT(*) FROM Produkter INNER JOIN Priser ON Produkter.Artikelnummer = Priser.Artikelnummer " +
+                //    "WHERE Foretagsepost = @epost AND Produkter.Artikelnummer = @artnummer";
+
+                var query = "SELECT COUNT(*) FROM Produkter WHERE Artikelnummer = @artnummer";
 
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
@@ -89,14 +91,31 @@ namespace ShoppingList.DataAccess
 
                     if (count > 0)
                     {
-                        query = "UPDATE Produkter SET Artikelnummer = @artnummer, Produktnamn = @produktnamn, Pris = @pris, Jamforelsepris = @jmf, Kategori = @kategori, Typ = @typ, BildURL = @bildURL " +
-                            "WHERE Artikelnummer = @artnummer AND Foretagsepost = @epost";
+                        query = "SELECT COUNT(*) FROM PRISER WHERE Foretagsepost = @epost AND Artikelnummer = @artnummer";
+
+                        command = new SqlCommand(query, conn);
+                        command.Parameters.Add(new SqlParameter("epost", email));
+                        command.Parameters.Add(new SqlParameter("artnummer", int.Parse(details[0])));
+
+                        count = (int)command.ExecuteScalar();
+
+                        if (count > 0)
+                        {
+                            query = "UPDATE Priser SET Produktnamn = @produktnamn, Pris = @pris, Jamforelsepris = @jmf, BildURL = @bildURL " +
+                                "WHERE Artikelnummer = @artnummer AND Foretagsepost = @epost";
+                        }
+                        else
+                        {
+                            query = "INSERT INTO Priser (Artikelnummer, Produktnamn, Pris, Jamforelsepris, BildURL, Foretagsepost) " +
+                                "VALUES(@artnummer, @produktnamn, @pris, @jmf, @bildURL, @epost)";
+                        }
                     }
                     else
                     {
-
-                        query = "INSERT INTO Produkter(Artikelnummer, Produktnamn, Pris, Jamforelsepris, Kategori, Typ, BildURL, Foretagsepost) " +
-                            "VALUES(@artnummer, @produktnamn, @pris, @jmf, @kategori, @typ, @bildURL, @epost)";
+                        query = "INSERT INTO Produkter(Artikelnummer, Kategori, Typ) " +
+                            "VALUES(@artnummer, @kategori, @typ) " +
+                            "INSERT INTO Priser(Artikelnummer, Produktnamn, Pris, Jamforelsepris, BildURL, Foretagsepost) " +
+                            "VALUES(@artnummer, @produktnamn, @pris, @jmf, @bildURL, @epost)";
                     }
 
                     command = new SqlCommand(query, conn);
@@ -159,7 +178,8 @@ namespace ShoppingList.DataAccess
                 {
                     foreach (var supplier in suppliers)
                     {
-                        query = "SELECT TOP 1 Pris From Produkter WHERE Artikelnummer = @artikelnummer AND Foretagsepost = @email";
+                        query = "SELECT Pris From Produkter INNER JOIN Priser ON Produkter.Artikelnummer = Priser.Artikelnummer " +
+                            "WHERE Artikelnummer = @artikelnummer AND Foretagsepost = @email";
                         command = new SqlCommand(query, conn);
                         command.Parameters.Add(new SqlParameter("artikelnummer", product.Artikelnummer));
                         command.Parameters.Add(new SqlParameter("email", supplier.Email));
