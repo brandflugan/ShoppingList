@@ -8,7 +8,7 @@
             return;
         }
 
-        $('#dropdown-item-count').text(parseInt($('#dropdown-item-count').text()) + parseInt(amount));
+        //$('#dropdown-item-count').text(parseInt($('#dropdown-item-count').text()) + parseInt(amount));
 
         var prod = searchList[searchIndex];
         prod.Antal = amount;
@@ -21,6 +21,7 @@
         else {
             addNew(prod);
         }
+        updateShoppingCart();
     };
 
     function addNew(prod) {
@@ -139,17 +140,15 @@
     });
 
     $("#checkout-list").on('click', '.checkout-btn-remove', function (e) {
-        $(this).closest("ul").remove();
-        $('#dropdown-item-count').text(parseInt($('#dropdown-item-count').text()) - 1);
         var index = this.id.charAt(this.id.length - 1);
+        var id = $(this).closest("ul").attr("id");
+        var artNumber = id.substring(id.length - 4, id.length);
+        var amount = $("#checkout-product-id-" + artNumber).find("input").val();
+        //$('#dropdown-item-count').text(parseInt($('#dropdown-item-count').text()) - amount);
         $(".hidden-product-index-" + index).remove();
-        if (parseInt($('#dropdown-item-count').text()) < 1) {
-            $("ul .dropdown").addClass("disabled");
-            $("ul .dropdown > a").addClass("disabled");
-        }
-        else {
-            e.stopPropagation();
-        }
+        $(this).closest("ul").remove();
+        updateShoppingCart();
+        
     });
 
     $("#checkout-list").on('change', '.checkout-input', function (e) {
@@ -161,7 +160,27 @@
         var currentFormValue = parseInt($("#checkout-form [name='products[" + index + "].Antal']").val());
 
         $("#checkout-form [name='products[" + index + "].Antal']").val(parseInt($(this).val()));
+
+        updateShoppingCart(e);
     });
+
+    function updateShoppingCart(event) {
+        var countProducts = 0;
+        $("#checkout-list ul").each(function () {
+            var id = this.id.substring(this.id.length - 4, this.id.length);
+            var inputValue = parseInt($(this).find("input").val());
+            countProducts += inputValue;
+        });
+        $('#dropdown-item-count').text(countProducts);
+
+        if (parseInt($('#dropdown-item-count').text()) < 1) {
+            $("ul .dropdown").addClass("disabled");
+            $("ul .dropdown > a").addClass("disabled");
+        }
+        else if (event != null) {
+            event.stopPropagation();
+        }
+    }
 
 })();
 

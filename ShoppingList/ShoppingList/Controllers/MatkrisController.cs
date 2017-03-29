@@ -26,15 +26,18 @@ namespace ShoppingList.Controllers
         [HttpPost]
         public ActionResult resultat(List<Product> products)
         {
-            if (!products.Any(p => p.Antal < 1 || p.Antal > 99))
+            if (products != null)
             {
-                products = products.Where(p => p != null).ToList();
+                if (!products.Any(p => p.Antal < 1 || p.Antal > 99))
+                {
+                    products = products.Where(p => p != null).ToList();
 
-                var suppliers = dataAccess.MatchSuppliersWithProducts(products);
+                    var suppliers = dataAccess.MatchSuppliersWithProducts(products);
 
-                Score.AddProductPrices(suppliers);
+                    Score.AddProductPrices(suppliers);
 
-                return View(suppliers);
+                    return View(suppliers);
+                }
             }
             return RedirectToAction("/index");
         }
