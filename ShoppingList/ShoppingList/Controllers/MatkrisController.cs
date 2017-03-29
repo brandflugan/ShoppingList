@@ -24,7 +24,7 @@ namespace ShoppingList.Controllers
         }
 
         [HttpPost]
-        public ActionResult index(List<Product> products)
+        public ActionResult resultat(List<Product> products)
         {
             if (!products.Any(p => p.Antal < 1 || p.Antal > 99))
             {
@@ -34,18 +34,9 @@ namespace ShoppingList.Controllers
 
                 Score.AddProductPrices(suppliers);
 
-                //Vi går vidare till rätt View här
-                return View("resultat", suppliers);
+                return View(suppliers);
             }
             return RedirectToAction("/index");
-        }
-
-        public ActionResult resultat(List<Supplier> suppliers = null)
-        {
-            if(suppliers == null)
-                return RedirectToAction("/index");
-            else 
-                return View(suppliers);
         }
 
         [Authorize]

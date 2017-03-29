@@ -113,6 +113,7 @@
             addProductToCheckout(index, amount);
             if ($("ul .dropdown").hasClass("disabled")) {
                 $("ul .dropdown").removeClass("disabled");
+                $("ul .dropdown > a").removeClass("disabled");
             }
         })
     };
@@ -144,6 +145,7 @@
         $(".hidden-product-index-" + index).remove();
         if (parseInt($('#dropdown-item-count').text()) < 1) {
             $("ul .dropdown").addClass("disabled");
+            $("ul .dropdown > a").addClass("disabled");
         }
         else {
             e.stopPropagation();

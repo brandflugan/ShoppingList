@@ -180,5 +180,6 @@ namespace ShoppingList.DataAccess
 
             return suppliers;
         }
+
     }
 }
