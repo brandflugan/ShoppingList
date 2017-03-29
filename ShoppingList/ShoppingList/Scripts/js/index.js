@@ -82,26 +82,29 @@
             $('#product-search').append
                 (
                     '<ul class="list-group flex-container list-special">' +
-                    ' <li class="list-group-item justify-content-between flex-item clearfix"> ' +
-                        '<img class="product-image img-responsive" src="' + searchList[i].BildURL + '" />' +
-                        '<div class="pull-right mobile-version">' +
-                            '<p class="product-name text-right">' + searchList[i].Produktnamn + '</p>' +
-                            '<p class="product-price text-right text-primary dp-block">' + searchList[i].Pris + '<span>:-</span></p>' +
-                            '<p class="text-right text-muted small">jmf.pris: <span class="product-jmf">' + searchList[i].Jmf + '</span>:-/kg</p>' +
-                        '</div>' +
-                    '</li>' +
-                    '<li class="product-name list-group-item justify-content-between flex-item clearfix">' + searchList[i].Produktnamn + '</li>' +
-                    '<li class="list-group-item justify-content-between flex-item clearfix">' +
-                        '<span class="product-price text-primary dp-block">' + searchList[i].Pris + ':-</span>' +
-                        '<span class="product-jmf text-muted small">jmf.pris: <span class="product-jmf">' + searchList[i].Jmf + '</span>:-/kg</span>' +
-                    '</li>' +
-                    '<li class="list-group-item justify-content-between flex-item clearfix">' +
-                        '<input id="product-count-id-' + i + '" class="product-count form-control" type="number" min="1" max="99" value="1" />' +
-                        '<span class="text-right text-muted"> st</span>' +
-                    '</li>' +
-                    '<li class="list-group-item justify-content-between flex-item clearfix">' +
-                        '<input id="product-id-' + i + '" class="product-btn-add btn btn-default" type="button" value="Lägg till" />' +
-                    '</li>' +
+                        '<li class="list-group-item justify-content-between flex-item clearfix">' +
+                            '<img class="product-image img-responsive" src="' + searchList[i].BildURL + '" />' +
+                            '<div class="pull-right mobile-version">' +
+                                '<p class="product-name text-right">' + searchList[i].Produktnamn + '</p>' +
+                                '<p class="product-price text-right text-primary dp-block">' + searchList[i].Pris + '<span>:-</span></p>' +
+                                '<p class="text-right text-muted small">jmf.pris: <span class="product-jmf">' + searchList[i].Jmf + '</span>:-/kg</p>' +
+                            '</div>' +
+                        '</li>' +
+                        '<li class="product-name list-group-item justify-content-between flex-item clearfix">' + searchList[i].Produktnamn + '</li>' +
+                        '<li class="list-group-item justify-content-between flex-item clearfix">' + 
+                            '<img class="product-company-image img-responsive" src="' + searchList[i].BildURL + '" />' +
+                        '</li>' +
+                        '<li class="list-group-item justify-content-between flex-item clearfix">' +
+                            '<span class="product-price text-primary dp-block">' + searchList[i].Pris + ':-</span>' +
+                            '<span class="product-jmf text-muted small">jmf.pris: <span class="product-jmf">' + searchList[i].Jmf + '</span>:-/kg</span>' +
+                        '</li>' +
+                        '<li class="list-group-item justify-content-between flex-item clearfix">' +
+                            '<input id="product-count-id-' + i + '" class="product-count form-control" type="number" min="1" max="99" value="1" />' +
+                            '<span class="text-right text-muted"> st</span>' +
+                        '</li>' +
+                        '<li class="list-group-item justify-content-between flex-item clearfix">' +
+                            '<input id="product-id-' + i + '" class="product-btn-add btn btn-default" type="button" value="Lägg till" />' +
+                        '</li>' +
                     '</ul>'
                 )
         }
