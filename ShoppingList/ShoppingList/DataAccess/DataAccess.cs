@@ -74,9 +74,6 @@ namespace ShoppingList.DataAccess
             {
                 var details = product.Split(';');
 
-                //var query = "SELECT COUNT(*) FROM Produkter INNER JOIN Priser ON Produkter.Artikelnummer = Priser.Artikelnummer " +
-                //    "WHERE Foretagsepost = @epost AND Produkter.Artikelnummer = @artnummer";
-
                 var query = "SELECT COUNT(*) FROM Produkter WHERE Artikelnummer = @artnummer";
 
                 using (SqlConnection conn = new SqlConnection(connectionString))
@@ -102,12 +99,16 @@ namespace ShoppingList.DataAccess
                         if (count > 0)
                         {
                             query = "UPDATE Priser SET Produktnamn = @produktnamn, Pris = @pris, Jamforelsepris = @jmf, BildURL = @bildURL " +
-                                "WHERE Artikelnummer = @artnummer AND Foretagsepost = @epost";
+                                "WHERE Artikelnummer = @artnummer AND Foretagsepost = @epost " +
+                                "UPDATE Produkter SET Kategori = @kategori, Typ = @typ " +
+                                "WHERE Artikelnummer = @artnummer";
                         }
                         else
                         {
                             query = "INSERT INTO Priser (Artikelnummer, Produktnamn, Pris, Jamforelsepris, BildURL, Foretagsepost) " +
-                                "VALUES(@artnummer, @produktnamn, @pris, @jmf, @bildURL, @epost)";
+                                "VALUES(@artnummer, @produktnamn, @pris, @jmf, @bildURL, @epost) " +
+                                "UPDATE Produkter SET Kategori = @kategori, Typ = @typ " +
+                                "WHERE Artikelnummer = @artnummer";
                         }
                     }
                     else
@@ -179,7 +180,7 @@ namespace ShoppingList.DataAccess
                     foreach (var supplier in suppliers)
                     {
                         query = "SELECT Pris From Produkter INNER JOIN Priser ON Produkter.Artikelnummer = Priser.Artikelnummer " +
-                            "WHERE Artikelnummer = @artikelnummer AND Foretagsepost = @email";
+                            "WHERE Produkter.Artikelnummer = @artikelnummer AND Foretagsepost = @email";
                         command = new SqlCommand(query, conn);
                         command.Parameters.Add(new SqlParameter("artikelnummer", product.Artikelnummer));
                         command.Parameters.Add(new SqlParameter("email", supplier.Email));
@@ -189,16 +190,50 @@ namespace ShoppingList.DataAccess
 
                         while (reader.Read())
                         {
-                            Product prod = new Product { Pris = reader.GetDecimal(0), Antal = product.Antal, Produktnamn = product.Produktnamn } ?? new Product { Match = false };
-                            supplier.Products.Add(prod);
+                            Product prod = new Product { Pris = reader.GetDecimal(0), Antal = product.Antal, Produktnamn = product.Produktnamn } ??
+                                FindEquivalentProduct(product, supplier.Email, conn);
+                            //supplier.Products.Add(product.Match = false);
+                            //supplier.Products.Add(prod);
                         }
 
                         conn.Close();
+
+                        //for(int i = 0; i > supplier.Products.Count; i++)
+                        //{
+                        //    if(supplier.Products[i].Match == false)
+                        //    {
+                        //        supplier.Products[i] = FindEquivalentProduct();
+                        //    }
+                        //}
                     }
+
                 }
             }
 
             return suppliers;
+        }
+
+        private Product FindEquivalentProduct(Product product, string supplier, SqlConnection conn)
+        {
+            var category = product.Kategori;
+            var type = product.Typ;
+
+            var query = "SELECT TOP 1 Produknamn, Pris, Jamforelsepris, BildURL FROM Foretag INNER JOIN Priser ON Epost = Foretagsepost " +
+                "INNER JOIN  WHERE Epost = @email AND Typ=@type AND Kategori = @category";
+
+            SqlCommand command = new SqlCommand(query, conn);
+
+            SqlDataReader reader = command.ExecuteReader();
+
+            var equivalentProduct = new Product
+            {
+                Produktnamn = reader.GetString(0),
+                Pris = reader.GetDecimal(1),
+                Jmf = reader.GetDecimal(2),
+                BildURL = reader.GetString(3)
+            };
+
+            return equivalentProduct;
         }
 
     }
