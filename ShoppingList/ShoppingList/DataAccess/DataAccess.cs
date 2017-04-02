@@ -9,8 +9,8 @@ namespace ShoppingList.DataAccess
 {
     public class DataAccess
     {
-        //string connectionString = @"Data Source=(localdb)\ProjectsV13;Initial Catalog = MatkrisDB; Integrated Security = True; Connect Timeout = 30; Encrypt=False;TrustServerCertificate=True;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
-        string connectionString = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=MatkrisDB;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=True;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
+        string connectionString = @"Data Source=(localdb)\ProjectsV13;Initial Catalog = MatkrisDB; Integrated Security = True; Connect Timeout = 30; Encrypt=False;TrustServerCertificate=True;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
+        //string connectionString = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=MatkrisDB;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=True;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
         public static void Seed()
         {
 
@@ -44,7 +44,7 @@ namespace ShoppingList.DataAccess
             List<Product> topProducts = new List<Product>();
 
             var query = "SELECT TOP 5 Produkter.Artikelnummer, min(Produktnamn), min(Pris), min(Jamforelsepris), min(Kategori), " +
-                "min(Typ), min(BildURL)  FROM Produkter INNER JOIN Priser ON Produkter.Artikelnummer = Priser.Artikelnummer " +
+                "min(Typ), min(BildURL) FROM Produkter INNER JOIN Priser ON Produkter.Artikelnummer = Priser.Artikelnummer " +
                 "WHERE Produktnamn LIKE '%" + @term + "%' GROUP BY Produkter.Artikelnummer";
 
             using (SqlConnection conn = new SqlConnection(connectionString))
@@ -179,7 +179,7 @@ namespace ShoppingList.DataAccess
                 {
                     foreach (var supplier in suppliers)
                     {
-                        query = "SELECT Pris, Jamforelsepris, Produktnamn FROM Produkter INNER JOIN Priser ON Produkter.Artikelnummer = Priser.Artikelnummer " +
+                        query = "SELECT Pris, Jamforelsepris, Produktnamn, BildURL FROM Produkter INNER JOIN Priser ON Produkter.Artikelnummer = Priser.Artikelnummer " +
                             "WHERE Produkter.Artikelnummer = @artikelnummer AND Foretagsepost = @email";
                         command = new SqlCommand(query, conn);
                         command.Parameters.Add(new SqlParameter("artikelnummer", product.Artikelnummer));
@@ -193,7 +193,7 @@ namespace ShoppingList.DataAccess
                         if (reader.Read())
                         {
                             prod = new Product { Pris = reader.GetDecimal(0), Antal = product.Antal, Jmf = reader.GetDecimal(1),
-                                Produktnamn = reader.GetString(2), Match = true };
+                                Produktnamn = reader.GetString(2), BildURL = reader.GetString(3), Match = true };
                         }
                         else
                         {

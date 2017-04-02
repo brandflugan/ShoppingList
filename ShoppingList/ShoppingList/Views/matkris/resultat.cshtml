@@ -17,7 +17,7 @@
                     <div id="result-list">
                         @if (Model != null)
                         {
-                            foreach (var company in Model)
+                            foreach (var supplier in Model)
                             {
                                 <ul class="thumbnails list-unstyled">
                                     <li class="row col-xs-12">
@@ -40,7 +40,7 @@
                                                     <div class="row">
                                                         <div class="col-xs-4"><b>60%</b><br /><small>VAROR</small></div>
                                                         <div class="col-xs-4"><b>18</b><br /><small>ANTAL</small></div>
-                                                        <div class="col-xs-4"><b>432:-</b><br /><small>PRIS</small></div>
+                                                        <div class="col-xs-4"><b>@supplier.TotalCost</b><br /><small>PRIS</small></div>
                                                     </div>
                                                     <div class="row">
                                                         <div class="col-md-12"><button class="btn btn-default btn-100-width margin-15-top"><span class="glyphicon glyphicon-edit"></span> Ändra varor</button></div>
@@ -49,28 +49,31 @@
                                             </div>
                                             <div class="col-md-9 no-float product-list">
                                                 <div class="row" style="max-height:450px">
-                                                    <ul class="list-group result-flex-container list-special">
-                                                        <li class="list-group-item justify-content-between result-flex-item clearfix">
-                                                            <img class="product-image img-responsive" src="https://d1hr6nb56yyl1.cloudfront.net/product-images/9289-180.jpg">
-                                                            <div class="pull-right mobile-version">
-                                                                <p class="product-name text-right">Ketchup, Heinz, 1 kg</p>
-                                                                <p class="product-price text-right text-primary dp-block">19.95<span>:-</span></p>
-                                                                <p class="text-right text-muted small">jmf.pris: <span class="product-jmf">19.95</span>:-/kg</p>
-                                                            </div>
-                                                        </li>
-                                                        <li class="product-name list-group-item justify-content-between flex-item clearfix">Ketchup, Heinz, 1 kg</li>
-                                                        <li class="list-group-item justify-content-between result-flex-item clearfix">
-                                                            <span class="product-price text-primary dp-block">19.95:-</span>
-                                                            <span class="product-jmf text-muted small">jmf.pris: <span class="product-jmf">19.95</span>:-/kg</span>
-                                                        </li>
-                                                        <li class="list-group-item justify-content-between result-flex-item clearfix">
-                                                            <input id="" class="product-count form-control" type="number" min="1" max="99" value="1" disabled>
-                                                            <span class="text-right text-muted"> st</span>
-                                                        </li>
-                                                        <li class="list-group-item justify-content-between result-flex-item clearfix">
-                                                            <input id="" class="btn btn-default" type="button" value="Ändra vara" disabled>
-                                                        </li>
-                                                    </ul>
+                                                    @foreach (var product in supplier.Products)
+                                                    {
+                                                        <ul class="list-group result-flex-container list-special">
+                                                            <li class="list-group-item justify-content-between result-flex-item clearfix">
+                                                                <img class="product-image img-responsive" src="@product.BildURL">
+                                                                <div class="pull-right mobile-version">
+                                                                    <p class="product-name text-right">@product.Produktnamn</p>
+                                                                    <p class="product-price text-right text-primary dp-block">@product.Pris<span>:-</span></p>
+                                                                    <p class="text-right text-muted small">jmf.pris: <span class="product-jmf">@product.Jmf</span>:-/kg</p>
+                                                                </div>
+                                                            </li>
+                                                            <li class="product-name list-group-item justify-content-between flex-item clearfix">@product.Produktnamn</li>
+                                                            <li class="list-group-item justify-content-between result-flex-item clearfix">
+                                                                <span class="product-price text-primary dp-block">@product.Pris</span>
+                                                                <span class="product-jmf text-muted small">jmf.pris: <span class="product-jmf">@product.Jmf</span>:-/kg</span>
+                                                            </li>
+                                                            <li class="list-group-item justify-content-between result-flex-item clearfix">
+                                                                <input id="" class="product-count form-control" type="number" min="1" max="99" value="1" disabled>
+                                                                <span class="text-right text-muted"> st</span>
+                                                            </li>
+                                                            <li class="list-group-item justify-content-between result-flex-item clearfix">
+                                                                <input id="" class="btn btn-default" type="button" value="Ändra vara" disabled>
+                                                            </li>
+                                                        </ul>
+                                                    }
                                                 </div>
                                             </div>
                                         </div>
