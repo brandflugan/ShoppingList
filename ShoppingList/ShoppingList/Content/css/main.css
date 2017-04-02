@@ -96,12 +96,32 @@ ul.dropdown-cart {
     height: initial !important;
 }
 
+.row .no-float {
+    display: table-cell;
+    float: none;
+}
+
 .img-responsive {
     height: 85px;
     width: auto;
     display: inline;
     float: left;
 }
+
+.thumbnail {
+    display: table;
+    width: 100%;
+}
+
+.thumbnail > .col-md-3.no-float.info-list {
+    padding: 0;
+    border-right: 1px solid #ddd;
+}
+
+.thumbnail > .col-md-9.no-float.product-list {
+    
+}
+
 
 .checkout-flex-container {
     display: flex;
