@@ -240,6 +240,10 @@ namespace ShoppingList.DataAccess
                 };
 
             }
+            else
+            {
+                equivalentProduct = new Product { Match = false };
+            }
 
             return equivalentProduct;
         }
