@@ -73,6 +73,8 @@
     function addProductToCheckoutForm(product, index) {
         $("#checkout-form").append('<input class="hidden-product-index-' + index + '" name="products[' + index + '].Artikelnummer" value="' + product.Artikelnummer + '" type="hidden"/>');
         $("#checkout-form").append('<input class="hidden-product-index-' + index + '" name="products[' + index + '].Antal" value="' + product.Antal + '" type="hidden"/>');
+        $("#checkout-form").append('<input class="hidden-product-index-' + index + '" name="products[' + index + '].Typ" value="' + product.Typ +
+            '" type="hidden"/>');
     }
 
     function listProducts() {

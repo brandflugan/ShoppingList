@@ -9,8 +9,8 @@ namespace ShoppingList.DataAccess
 {
     public class DataAccess
     {
-        //string connectionString = @"Data Source=(localdb)\ProjectsV13;Initial Catalog = MatkrisDB; Integrated Security = True; Connect Timeout = 30; Encrypt=False;TrustServerCertificate=True;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
-        string connectionString = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=MatkrisDB;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=True;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
+        string connectionString = @"Data Source=(localdb)\ProjectsV13;Initial Catalog = MatkrisDB; Integrated Security = True; Connect Timeout = 30; Encrypt=False;TrustServerCertificate=True;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
+        //string connectionString = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=MatkrisDB;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=True;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
         public static void Seed()
         {
 
@@ -179,7 +179,7 @@ namespace ShoppingList.DataAccess
                 {
                     foreach (var supplier in suppliers)
                     {
-                        query = "SELECT Pris From Produkter INNER JOIN Priser ON Produkter.Artikelnummer = Priser.Artikelnummer " +
+                        query = "SELECT Pris, Jamforelsepris, Produktnamn FROM Produkter INNER JOIN Priser ON Produkter.Artikelnummer = Priser.Artikelnummer " +
                             "WHERE Produkter.Artikelnummer = @artikelnummer AND Foretagsepost = @email";
                         command = new SqlCommand(query, conn);
                         command.Parameters.Add(new SqlParameter("artikelnummer", product.Artikelnummer));
@@ -188,23 +188,22 @@ namespace ShoppingList.DataAccess
                         conn.Open();
                         reader = command.ExecuteReader();
 
-                        while (reader.Read())
+                        Product prod;
+
+                        if (reader.Read())
                         {
-                            Product prod = new Product { Pris = reader.GetDecimal(0), Antal = product.Antal, Produktnamn = product.Produktnamn } ??
-                                FindEquivalentProduct(product, supplier.Email, conn);
-                            //supplier.Products.Add(product.Match = false);
-                            //supplier.Products.Add(prod);
+                            prod = new Product { Pris = reader.GetDecimal(0), Antal = product.Antal, Jmf = reader.GetDecimal(1),
+                                Produktnamn = reader.GetString(2), Match = true };
+                        }
+                        else
+                        {
+                            reader.Close();
+                            prod = FindEquivalentProduct(product, supplier.Email, conn);
                         }
 
                         conn.Close();
 
-                        //for(int i = 0; i > supplier.Products.Count; i++)
-                        //{
-                        //    if(supplier.Products[i].Match == false)
-                        //    {
-                        //        supplier.Products[i] = FindEquivalentProduct();
-                        //    }
-                        //}
+                        supplier.Products.Add(prod);
                     }
 
                 }
@@ -213,25 +212,34 @@ namespace ShoppingList.DataAccess
             return suppliers;
         }
 
-        private Product FindEquivalentProduct(Product product, string supplier, SqlConnection conn)
+        private Product FindEquivalentProduct(Product product, string supplierEmail, SqlConnection conn)
         {
             var category = product.Kategori;
             var type = product.Typ;
 
-            var query = "SELECT TOP 1 Produknamn, Pris, Jamforelsepris, BildURL FROM Foretag INNER JOIN Priser ON Epost = Foretagsepost " +
-                "INNER JOIN  WHERE Epost = @email AND Typ=@type AND Kategori = @category";
+            var query = "SELECT TOP 1 Produktnamn, Pris, Jamforelsepris, BildURL FROM Foretag INNER JOIN Priser ON Epost = Foretagsepost " +
+                "INNER JOIN Produkter on Priser.Artikelnummer = Produkter.Artikelnummer WHERE Epost = @email AND Typ=@typ";
 
             SqlCommand command = new SqlCommand(query, conn);
 
+            command.Parameters.Add(new SqlParameter("email", supplierEmail));
+            command.Parameters.Add(new SqlParameter("typ", product.Typ));
+
             SqlDataReader reader = command.ExecuteReader();
 
-            var equivalentProduct = new Product
+            Product equivalentProduct = null;
+
+            if (reader.Read())
             {
-                Produktnamn = reader.GetString(0),
-                Pris = reader.GetDecimal(1),
-                Jmf = reader.GetDecimal(2),
-                BildURL = reader.GetString(3)
-            };
+                equivalentProduct = new Product
+                {
+                    Produktnamn = reader.GetString(0),
+                    Pris = reader.GetDecimal(1),
+                    Jmf = reader.GetDecimal(2),
+                    BildURL = reader.GetString(3)
+                };
+
+            }
 
             return equivalentProduct;
         }
