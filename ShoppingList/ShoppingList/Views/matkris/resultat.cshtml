@@ -17,8 +17,8 @@
             </div>
             <div class="justify-content-md-center">
                 <div id="result-list">
-                  @*//  @foreach (var supplier in Model)*@
-                    @*{*@
+                    @foreach (var supplier in Model)
+                    {
                     <ul class="thumbnails list-unstyled">
                         <li class="col-md-3">
                             <div class="thumbnail" style="padding: 0">
@@ -26,7 +26,7 @@
                                     <img alt="300x200" style="width: 100%" src="http://placehold.it/200x150">
                                 </div>
                                 <div class="caption">
-                                    <h2>Mathem.se</h2>
+                                    <h2>@supplier.Name</h2>
                                     <p><a href="www.mathem.se/">www.mathem.se/</a></p>
                                     <p><span class="glyphicon glyphicon-check"></span> Vinnare</p>
                                 </div>
@@ -38,7 +38,7 @@
                                     <div class="row">
                                         <div class="col-md-4"><b>60%</b><br /><small>VAROR</small></div>
                                         <div class="col-md-4"><b>18</b><br /><small>ANTAL</small></div>
-                                        <div class="col-md-4"><b>432:-</b><br /><small>PRIS</small></div>
+                                        <div class="col-md-4"><b>@supplier.TotalCost</b><br /><small>PRIS</small></div>
                                     </div>
                                     <div class="row">
                                         <div class="col-md-12"><button class="btn btn-default btn-100-width margin-15-top"><span class="glyphicon glyphicon-edit"></span> Ändra varor</button></div>
@@ -47,7 +47,7 @@
                             </div>
                         </li>
                     </ul>
-                    @*}*@
+                    }
                     
                 </div>
             </div>
