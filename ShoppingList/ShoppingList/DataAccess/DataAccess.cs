@@ -192,8 +192,15 @@ namespace ShoppingList.DataAccess
 
                         if (reader.Read())
                         {
-                            prod = new Product { Pris = reader.GetDecimal(0), Antal = product.Antal, Jmf = reader.GetDecimal(1),
-                                Produktnamn = reader.GetString(2), BildURL = reader.GetString(3), Match = true };
+                            prod = new Product
+                            {
+                                Pris = reader.GetDecimal(0),
+                                Antal = product.Antal,
+                                Jmf = reader.GetDecimal(1),
+                                Produktnamn = reader.GetString(2),
+                                BildURL = reader.GetString(3),
+                                Match = true
+                            };
                         }
                         else
                         {
@@ -248,5 +255,81 @@ namespace ShoppingList.DataAccess
             return equivalentProduct;
         }
 
+        public double FindMatch(Product prod)
+        {
+            string[] quantityTypes = { "cm", "g", "kg", "ml", "l", "cl", "dl" };
+            string firstValue = "";
+            string secondValue = null;
+            string currentValue = null;
+            bool X = false;
+            var breakout = false;
+
+            var details = prod.Produktnamn.Split(' ');
+
+            foreach (var type in quantityTypes)
+            {
+                foreach (var item in details)
+                {
+                    var index = item.IndexOf(type);
+                    double value = 0;
+                    int counter = 1;
+
+                    if (index != -1)
+                    {
+                        var character = item.Substring(index - 1, 1);
+                        if (double.TryParse(item.Substring(index - 1, 1), out value))
+                        {
+                            while (true)
+                            {
+                                if (double.TryParse(item.Substring(index - counter, 1), out value))
+                                {
+                                    currentValue += value;
+                                }
+                                else if (item.ToLower()[index - counter] == 'x')
+                                {
+                                    X = true;
+                                    firstValue = currentValue;
+                                    currentValue = "";
+                                }
+                                else if (item.ToLower()[index - counter] == ',')
+                                {
+                                    firstValue += item.ToLower()[index - counter];
+                                }
+                                if (item.Length == counter + 1)
+                                {
+                                    breakout = true;
+                                    break;
+                                }
+                                counter++;
+                            }
+                        }
+                    }
+                    if(breakout)
+                    {
+                        break;
+                    }
+                }
+                if(breakout)
+                {
+                    break;
+                }
+            }
+
+            double quantity = 0;
+            firstValue = firstValue.Replace(',', '.');
+
+            if (X)
+            {
+                secondValue = currentValue.Replace(',', '.');
+                quantity = double.Parse(new string(secondValue.ToCharArray().Reverse().ToArray())) *
+                    double.Parse(new string(firstValue.ToCharArray().Reverse().ToArray()));
+            }
+            else
+            {
+                quantity = double.Parse(new string(currentValue.ToCharArray().Reverse().ToArray()));
+            }
+
+            return quantity;
+        }
     }
 }

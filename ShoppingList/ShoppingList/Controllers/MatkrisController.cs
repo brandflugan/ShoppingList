@@ -20,6 +20,8 @@ namespace ShoppingList.Controllers
         // GET: Matkris
         public ActionResult index()
         {
+            var result = dataAccess.FindMatch(new Models.Product { Produktnamn = "Kycklingfärs Kronfågel, 500g" });
+
             return View();
         }
 
@@ -136,7 +138,7 @@ namespace ShoppingList.Controllers
 
         private void ValidateProductlist(List<string> productlist, ref List<Error> errorlist)
         {
-            if (productlist[0].ToLower() != ("Artnummer;Produktnamn;Pris;jmf;kategori;typ;Bild-URL").ToLower())
+            if (productlist[0].ToLower() != ("artnummer;produktnamn;pris;jmf;kategori;typ;Bild-URL;marke;mangd;land;taggar").ToLower())
             {
                 errorlist.Add(new Error(1, "Första raden på prisfilen är ej korrekt formatterad. Se exempel för hur raden ska se ut."));
             }
@@ -148,7 +150,7 @@ namespace ShoppingList.Controllers
                     var details = productlist[i].Split(';');
                     var error = "";
 
-                    if (details.Length != 7)
+                    if (details.Length != 11)
                     {
                         error += "Raden innehåller inte korrekt antal fält. \n";
                     }
