@@ -52,6 +52,10 @@ ul.list-group.result-flex-container.list-special li {
     margin-top: -5px;
 }
 
+.result-item-info-matched {
+    background-color: rgba(69, 179, 157, 0.3);
+}
+
 .result-item-info-replaced {
     background-color: rgba(240, 173, 78, 0.3);
 }
