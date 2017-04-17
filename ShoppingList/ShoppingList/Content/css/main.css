@@ -550,7 +550,7 @@ ul.dropdown-cart {
     .result-flex-item:nth-child(3) {
         display: inline;
         order: 0;
-        flex: 0 0 135px;
+        flex: 0 0 150px;
         align-self: auto;
         border-right: 0;
     }
@@ -559,7 +559,6 @@ ul.dropdown-cart {
         order: 0;
         flex: 0 0 auto;
         align-self: auto;
-        border-right: 0;
     }
 
         .result-flex-item:nth-child(4) .form-control {
