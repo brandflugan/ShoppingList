@@ -20,7 +20,7 @@ namespace ShoppingList.Controllers
         // GET: Matkris
         public ActionResult index()
         {
-            var result = dataAccess.GetQuantity(new Models.Product { Produktnamn = "Kycklingfärs Kronfågel, 500g" });
+           // var result = dataAccess.GetQuantity(new Models.Product { Produktnamn = "Kycklingfärs Kronfågel, 500g" });
 
             return View();
         }
