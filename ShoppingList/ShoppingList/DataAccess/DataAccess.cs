@@ -9,8 +9,8 @@ namespace ShoppingList.DataAccess
 {
     public class DataAccess
     {
-        string connectionString = @"Data Source=(localdb)\ProjectsV13;Initial Catalog = MatkrisDB; Integrated Security = True; Connect Timeout = 30; Encrypt=False;TrustServerCertificate=True;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
-        //string connectionString = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=MatkrisDB;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=True;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
+        //string connectionString = @"Data Source=(localdb)\ProjectsV13;Initial Catalog = MatkrisDB; Integrated Security = True; Connect Timeout = 30; Encrypt=False;TrustServerCertificate=True;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
+        string connectionString = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=MatkrisDB;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=True;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
         public static void Seed()
         {
 
@@ -244,13 +244,14 @@ namespace ShoppingList.DataAccess
                     Jmf = reader.GetDecimal(2),
                     BildURL = reader.GetString(3),
                     MatchType = MatchType.Replaced,
-                    Replaced = product.Produktnamn
+                    Replaced = product.Produktnamn,
+                    Antal = product.Antal
                 };
 
             }
             else
             {
-                equivalentProduct = new Product { Produktnamn = product.Produktnamn, MatchType = MatchType.Unavailable };
+                equivalentProduct = new Product { Produktnamn = product.Produktnamn, MatchType = MatchType.Unavailable, Antal = product.Antal };
             }
 
             return equivalentProduct;
