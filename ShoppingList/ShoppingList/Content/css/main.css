@@ -107,16 +107,6 @@ ul.list-group.result-flex-container.list-special {
         width: calc(100% - 16px);
     }
 
-.result-flex-item:nth-child(5) {
-    order: 0;
-    flex: 0 1 auto;
-    align-self: auto;
-}
-
-    .result-flex-item:nth-child(5) input {
-        width: 100%;
-    }
-
 .mt-5 {
     display: block;
     margin-top: 5px;
@@ -579,12 +569,6 @@ ul.dropdown-cart {
             text-align: center;
             padding-right: 5px;
         }
-
-    .result-flex-item:nth-child(5) {
-        order: 0;
-        flex: 0 1 auto;
-        align-self: auto;
-    }
 }
 
 @media (min-width: 768px) {
