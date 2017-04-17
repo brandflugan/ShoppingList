@@ -17,14 +17,14 @@ ul.list-group.result-flex-container.list-special {
     border-radius: 0 !important;
 }
 
-ul.list-group.result-flex-container.list-special li {
-    border-radius: 0 !important;
-    border-bottom-width: 0;
-}
-
-    ul.list-group.result-flex-container.list-special li:last-child {
-        border-bottom-width: 2px;
+    ul.list-group.result-flex-container.list-special li {
+        border-radius: 0 !important;
+        border-bottom-width: 0;
     }
+
+        ul.list-group.result-flex-container.list-special li:last-child {
+            border-bottom-width: 2px;
+        }
 
 .result-flex-container > li {
     border-radius: 0px !important;
@@ -35,15 +35,15 @@ ul.list-group.result-flex-container.list-special li {
     border-width: 2px;
 }
 
-.item-matched {
+.item-matched > li {
     border-color: rgba(69, 179, 157, 0.3);
 }
 
-.item-replaced {
+.item-replaced > li {
     border-color: rgba(240, 173, 78, 0.3);
 }
 
-.item-unavailable {
+.item-unavailable > li {
     border-color: rgba(217, 83, 79, 0.3);
 }
 
@@ -52,15 +52,15 @@ ul.list-group.result-flex-container.list-special li {
     margin-top: -5px;
 }
 
-.result-item-info-matched {
+.item-matched + .result-item-info {
     background-color: rgba(69, 179, 157, 0.3);
 }
 
-.result-item-info-replaced {
+.item-replaced + .result-item-info {
     background-color: rgba(240, 173, 78, 0.3);
 }
 
-.result-item-info-unavailable {
+.item-unavailable + .result-item-info {
     background-color: rgba(217, 83, 79, 0.3);
 }
 
@@ -68,7 +68,6 @@ ul.list-group.result-flex-container.list-special li {
     font-size: 11px;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     padding-bottom: 4px;
-
 }
 
 .result-flex-item:nth-child(1) {
@@ -114,9 +113,9 @@ ul.list-group.result-flex-container.list-special li {
     align-self: auto;
 }
 
-.result-flex-item:nth-child(5) input {
-    width: 100%;
-}
+    .result-flex-item:nth-child(5) input {
+        width: 100%;
+    }
 
 .mt-5 {
     display: block;
@@ -214,7 +213,6 @@ ul.dropdown-cart {
 }
 
 .row .no-float {
-
 }
 
 .img-responsive {
@@ -523,9 +521,9 @@ ul.dropdown-cart {
             width: 48px;
         }
 
-        ul.list-group.result-flex-container.list-special li {
-            border-bottom-width: 2px;
-        }
+    ul.list-group.result-flex-container.list-special li {
+        border-bottom-width: 2px;
+    }
 
     .result-flex-container {
         display: flex;

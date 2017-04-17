@@ -51,7 +51,7 @@
                                                 <div class="row" style="max-height:450px">
                                                     @foreach (var product in supplier.Products)
                                                     {
-                                                        <ul class="list-group result-flex-container list-special">
+                                                        <ul class="list-group result-flex-container list-special @if (product.MatchType == ShoppingList.Models.MatchType.Match) {<text>item-matched</text>} else if (product.MatchType == ShoppingList.Models.MatchType.Replaced) {<text>item-replaced</text>} else {<text>item-unavailable</text>}">
                                                             <li class="list-group-item justify-content-between result-flex-item clearfix">
                                                                 <img class="product-image img-responsive" src="@product.BildURL">
                                                                 <div class="pull-right mobile-version">
@@ -73,7 +73,16 @@
                                                                 <input id="" class="btn btn-default" type="button" value="Ändra vara" disabled>
                                                             </li>
                                                         </ul>
-                                                        <div class="result-item-info"><p class="result-item-info-text">Ersätter varan @product.Produktnamn</p></div>
+                                                        <div class="result-item-info">
+                                                            <p class="result-item-info-text">
+                                                                @if (product.MatchType == ShoppingList.Models.MatchType.Match)
+                                                                {<text>Varan matchades!</text>}
+                                                                else if (product.MatchType == ShoppingList.Models.MatchType.Replaced)
+                                                                {<text>Varan ersätter @product.Replaced</text>}
+                                                                else
+                                                                {<text>Varan hittades inte</text>}
+                                                            </p>
+                                                        </div>
                                                     }
                                                 </div>
                                             </div>
@@ -92,11 +101,11 @@
 </div>
 
 <script>
-    $(document).ready(function () {
-        $('.result-flex-container:odd').children().addClass('item-unavailable');
-        $('.result-flex-container:even').children().addClass('item-replaced');
-        //$('.result-flex-container:last').children().addClass('item-matched');
-        $('.product-list').find('.result-item-info:odd').addClass('result-item-info-unavailable');
-        $('.product-list').find('.result-item-info:even').addClass('result-item-info-replaced');
-    });
+    //$(document).ready(function () {
+    //    $('.result-flex-container:odd').children().addClass('item-unavailable');
+    //    $('.result-flex-container:even').children().addClass('item-replaced');
+    //    //$('.result-flex-container:last').children().addClass('item-matched');
+    //    $('.product-list').find('.result-item-info:odd').addClass('result-item-info-unavailable');
+    //    $('.product-list').find('.result-item-info:even').addClass('result-item-info-replaced');
+    //});
 </script>
