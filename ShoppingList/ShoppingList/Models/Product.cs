@@ -14,7 +14,15 @@ namespace ShoppingList.Models
         public string Kategori { get; set; }
         public string Typ { get; set; }
         public string BildURL { get; set; }
-        public bool Match { get; set; }
+        public MatchType MatchType { get; set; }
         public int Antal { get; set; } = 0;
+        public string Replaced { get; set; }
+    }
+
+    public enum MatchType
+    {
+        Match,
+        Replaced,
+        Unavailable
     }
 }

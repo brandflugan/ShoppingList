@@ -199,7 +199,7 @@ namespace ShoppingList.DataAccess
                                 Jmf = reader.GetDecimal(1),
                                 Produktnamn = reader.GetString(2),
                                 BildURL = reader.GetString(3),
-                                Match = true
+                                MatchType = MatchType.Match
                             };
                         }
                         else
@@ -212,7 +212,6 @@ namespace ShoppingList.DataAccess
 
                         supplier.Products.Add(prod);
                     }
-
                 }
             }
 
@@ -243,13 +242,15 @@ namespace ShoppingList.DataAccess
                     Produktnamn = reader.GetString(0),
                     Pris = reader.GetDecimal(1),
                     Jmf = reader.GetDecimal(2),
-                    BildURL = reader.GetString(3)
+                    BildURL = reader.GetString(3),
+                    MatchType = MatchType.Replaced,
+                    Replaced = product.Produktnamn
                 };
 
             }
             else
             {
-                equivalentProduct = new Product { Match = false };
+                equivalentProduct = new Product { Produktnamn = product.Produktnamn, MatchType = MatchType.Unavailable };
             }
 
             return equivalentProduct;
@@ -257,7 +258,7 @@ namespace ShoppingList.DataAccess
 
         public double GetQuantity(Product prod)
         {
-            string[] quantityTypes = { "g", "kg", "ml", "l", "cl", "dl" };
+            string[] quantityTypes = { "g", "kg", "ml", "l", "cl", "dl", "-p" };
             string firstValue = "";
             string secondValue = null;
             string currentValue = null;
@@ -300,12 +301,12 @@ namespace ShoppingList.DataAccess
                             breakout = true;
                         }
                     }
-                    if(breakout)
+                    if (breakout)
                     {
                         break;
                     }
                 }
-                if(breakout)
+                if (breakout)
                 {
                     break;
                 }
@@ -326,6 +327,18 @@ namespace ShoppingList.DataAccess
             }
 
             return quantity;
+        }
+
+        private string GetMatch(Product prod)
+        {
+            string productName = prod.Produktnamn;
+            double quanity = GetQuantity(prod);
+
+
+
+            // string details = productName.Split(' ');
+
+            return "";
         }
     }
 }
