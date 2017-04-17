@@ -9,8 +9,8 @@ namespace ShoppingList.DataAccess
 {
     public class DataAccess
     {
-        //string connectionString = @"Data Source=(localdb)\ProjectsV13;Initial Catalog = MatkrisDB; Integrated Security = True; Connect Timeout = 30; Encrypt=False;TrustServerCertificate=True;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
-        string connectionString = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=MatkrisDB;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=True;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
+        string connectionString = @"Data Source=(localdb)\ProjectsV13;Initial Catalog = MatkrisDB; Integrated Security = True; Connect Timeout = 30; Encrypt=False;TrustServerCertificate=True;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
+        //string connectionString = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=MatkrisDB;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=True;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
         public static void Seed()
         {
 
@@ -255,14 +255,16 @@ namespace ShoppingList.DataAccess
             return equivalentProduct;
         }
 
-        public double FindMatch(Product prod)
+        public double GetQuantity(Product prod)
         {
-            string[] quantityTypes = { "cm", "g", "kg", "ml", "l", "cl", "dl" };
+            string[] quantityTypes = { "g", "kg", "ml", "l", "cl", "dl" };
             string firstValue = "";
             string secondValue = null;
             string currentValue = null;
-            bool X = false;
+            bool multiply = false;
             var breakout = false;
+            double value = 0;
+            int counter = 1;
 
             var details = prod.Produktnamn.Split(' ');
 
@@ -271,15 +273,13 @@ namespace ShoppingList.DataAccess
                 foreach (var item in details)
                 {
                     var index = item.IndexOf(type);
-                    double value = 0;
-                    int counter = 1;
 
                     if (index != -1)
                     {
                         var character = item.Substring(index - 1, 1);
                         if (double.TryParse(item.Substring(index - 1, 1), out value))
                         {
-                            while (true)
+                            while (item.Length > counter)
                             {
                                 if (double.TryParse(item.Substring(index - counter, 1), out value))
                                 {
@@ -287,7 +287,7 @@ namespace ShoppingList.DataAccess
                                 }
                                 else if (item.ToLower()[index - counter] == 'x')
                                 {
-                                    X = true;
+                                    multiply = true;
                                     firstValue = currentValue;
                                     currentValue = "";
                                 }
@@ -295,13 +295,9 @@ namespace ShoppingList.DataAccess
                                 {
                                     firstValue += item.ToLower()[index - counter];
                                 }
-                                if (item.Length == counter + 1)
-                                {
-                                    breakout = true;
-                                    break;
-                                }
                                 counter++;
                             }
+                            breakout = true;
                         }
                     }
                     if(breakout)
@@ -316,10 +312,10 @@ namespace ShoppingList.DataAccess
             }
 
             double quantity = 0;
-            firstValue = firstValue.Replace(',', '.');
 
-            if (X)
+            if (multiply)
             {
+                firstValue = firstValue.Replace(',', '.');
                 secondValue = currentValue.Replace(',', '.');
                 quantity = double.Parse(new string(secondValue.ToCharArray().Reverse().ToArray())) *
                     double.Parse(new string(firstValue.ToCharArray().Reverse().ToArray()));
