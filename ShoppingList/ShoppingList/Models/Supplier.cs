@@ -23,7 +23,8 @@ namespace ShoppingList.Models
                 if (product.MatchType == MatchType.Match)
                 {
                     score += 2;
-                } else if (product.MatchType == MatchType.Replaced)
+                }
+                else if (product.MatchType == MatchType.Replaced)
                 {
                     score += 1;
                 }
@@ -32,9 +33,40 @@ namespace ShoppingList.Models
             Score = score;
         }
 
+        public string GetCheckoutURL()
+        {
+            string checkoutURL = string.Empty;
+
+            switch (Name)
+            {
+                case "mathem.se":
+                    checkoutURL = GetMathemCheckoutURL();
+                    break;
+            }
+
+            return checkoutURL;
+        }
+
+        private string GetMathemCheckoutURL()
+        {
+            string checkoutURL = "https://www.mathem.se/externalService.asmx/AddProductsToShoppingCart?";
+
+            foreach (var product in Products)
+            {
+                checkoutURL += "productIDs=" + product.Artikelnummer + "&productCounts=" + product.Antal;
+
+                if (Products.IndexOf(product) != Products.IndexOf(Products.Last()))
+                {
+                    checkoutURL += "&";
+                }
+            }
+
+            return checkoutURL;
+        }
+
         public double CalculateMatches()
         {
-            return Math.Round((GetMatched()/GetTotal())*100);
+            return Math.Round((GetMatched() / GetTotal()) * 100);
         }
 
         public double GetMatched()

@@ -20,7 +20,7 @@ namespace ShoppingList.Controllers
         // GET: Matkris
         public ActionResult index()
         {
-           // var result = dataAccess.GetQuantity(new Models.Product { Produktnamn = "Kycklingfärs Kronfågel, 500g" });
+            // var result = dataAccess.GetQuantity(new Models.Product { Produktnamn = "Kycklingfärs Kronfågel, 500g" });
 
             return View();
         }
@@ -215,6 +215,21 @@ namespace ShoppingList.Controllers
             productList = dataAccess.GetTopMatchesByName(searchterm);
 
             return Json(productList, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult checkout(string supplierID, string checkoutURL)
+        {
+            RunCheckoutURL(checkoutURL);
+
+            return new EmptyResult();
+        }
+
+        private void RunCheckoutURL(string checkoutURL)
+        {
+            //string url = checkoutURL;
+            //HttpWebRequest webReq = (HttpWebRequest)WebRequest.Create(string.Format(url));
+            //webReq.Method = "GET";
+            //HttpWebResponse webResponse = (HttpWebResponse)webReq.GetResponse();
         }
     }
 }

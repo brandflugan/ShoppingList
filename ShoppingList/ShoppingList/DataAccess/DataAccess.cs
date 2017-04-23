@@ -182,7 +182,7 @@ namespace ShoppingList.DataAccess
                     foreach (var supplier in suppliers)
                     {
                         query =
-                            "SELECT Pris, Jamforelsepris, Produktnamn, BildURL FROM Produkter INNER JOIN Priser ON Produkter.Artikelnummer = Priser.Artikelnummer " +
+                            "SELECT Priser.Artikelnummer, Pris, Jamforelsepris, Produktnamn, BildURL FROM Produkter INNER JOIN Priser ON Produkter.Artikelnummer = Priser.Artikelnummer " +
                             "WHERE Produkter.Artikelnummer = @artikelnummer AND Foretagsepost = @email";
                         command = new SqlCommand(query, conn);
                         command.Parameters.Add(new SqlParameter("artikelnummer", product.Artikelnummer));
@@ -197,11 +197,12 @@ namespace ShoppingList.DataAccess
                         {
                             prod = new Product
                             {
-                                Pris = reader.GetDecimal(0),
+                                Artikelnummer = reader.GetInt32(0),
+                                Pris = reader.GetDecimal(1),
                                 Antal = product.Antal,
-                                Jmf = reader.GetDecimal(1),
-                                Produktnamn = reader.GetString(2),
-                                BildURL = reader.GetString(3),
+                                Jmf = reader.GetDecimal(2),
+                                Produktnamn = reader.GetString(3),
+                                BildURL = reader.GetString(4),
                                 MatchType = MatchType.Match
                             };
                         }
@@ -227,9 +228,8 @@ namespace ShoppingList.DataAccess
             var type = product.Typ;
 
             var query =
-                "SELECT TOP 1 Produktnamn, Pris, Jamforelsepris, BildURL FROM Foretag INNER JOIN Priser ON Epost = Foretagsepost " +
+                "SELECT TOP 1 Priser.Artikelnummer, Produktnamn, Pris, Jamforelsepris, BildURL FROM Foretag INNER JOIN Priser ON Epost = Foretagsepost " +
                 "INNER JOIN Produkter on Priser.Artikelnummer = Produkter.Artikelnummer WHERE Epost = @email AND Typ=@typ";
-               // + "ORDER BY ABS(Mangd - @mangd)";
 
             SqlCommand command = new SqlCommand(query, conn);
 
@@ -245,10 +245,11 @@ namespace ShoppingList.DataAccess
             {
                 equivalentProduct = new Product
                 {
-                    Produktnamn = reader.GetString(0),
-                    Pris = reader.GetDecimal(1),
-                    Jmf = reader.GetDecimal(2),
-                    BildURL = reader.GetString(3),
+                    Artikelnummer = reader.GetInt32(0),
+                    Produktnamn = reader.GetString(1),
+                    Pris = reader.GetDecimal(2),
+                    Jmf = reader.GetDecimal(3),
+                    BildURL = reader.GetString(4),
                     MatchType = MatchType.Replaced,
                     Replaced = product.Produktnamn,
                     Antal = product.Antal
