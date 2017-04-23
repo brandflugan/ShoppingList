@@ -28,8 +28,11 @@
                                                 </div>
                                                 <div class="caption">
                                                     <h2>@supplier.Name</h2>
-                                                    <p><a href="http://www.@supplier.Name/">www.@supplier.Name/</a></p>
-                                                    <p><span class="glyphicon glyphicon-check"></span> Vinnare</p>
+                                                    <p><a href="http://www.@supplier.Name/" target="_blank">www.@supplier.Name/</a></p>
+                                                    @if (Model.IndexOf(supplier) == 0)
+                                                    {
+                                                        <p><span class="glyphicon glyphicon-check"></span> Vinnare</p>
+                                                    }
                                                 </div>
                                                 <div class="modal-footer" style="text-align: left">
                                                     <div class="progress">
@@ -43,7 +46,7 @@
                                                         <div class="col-xs-4"><b>@supplier.TotalCost</b><br /><small>PRIS</small></div>
                                                     </div>
                                                     <div class="row">
-                                                        <div class="col-md-12"><button class="btn btn-default btn-100-width margin-15-top"><span class="glyphicon glyphicon-edit"></span> Ändra varor</button></div>
+                                                        <div class="col-md-12"><button class="btn btn-default btn-100-width margin-15-top"><span class="glyphicon glyphicon-check"></span> Gå till butik</button></div>
                                                     </div>
                                                 </div>
                                             </div>

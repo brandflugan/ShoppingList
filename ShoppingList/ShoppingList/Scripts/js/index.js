@@ -95,9 +95,6 @@
                             '</div>' +
                         '</li>' +
                         '<li class="product-name list-group-item justify-content-between flex-item clearfix">' + searchList[i].Produktnamn + '</li>' +
-                        '<li class="list-group-item justify-content-between flex-item clearfix">' + 
-                            '<img class="product-company-image img-responsive" src="' + searchList[i].BildURL + '" />' +
-                        '</li>' +
                         '<li class="list-group-item justify-content-between flex-item clearfix">' +
                             '<span class="product-price text-primary dp-block">' + searchList[i].Pris + ':-</span>' +
                             '<span class="product-jmf text-muted small">jmf.pris: <span class="product-jmf">' + searchList[i].Jmf + '</span>:-/kg</span>' +

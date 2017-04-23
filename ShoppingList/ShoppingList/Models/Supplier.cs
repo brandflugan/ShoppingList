@@ -12,8 +12,9 @@ namespace ShoppingList.Models
         public List<Product> Products { get; set; } = new List<Product>();
         public decimal TotalCost { get; set; }
         public Product ActiveProduct { get; set; }
+        public int Score { get; set; }
 
-        public int CalculateScore()
+        public void CalculateScore()
         {
             int score = 0;
 
@@ -28,7 +29,7 @@ namespace ShoppingList.Models
                 }
             }
 
-            return score;
+            Score = score;
         }
 
         public double CalculateMatches()
