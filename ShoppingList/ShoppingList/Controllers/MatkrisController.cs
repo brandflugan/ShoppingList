@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Security.Claims;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -166,13 +167,6 @@ namespace ShoppingList.Controllers
                         {
                             error += "Fältet Artnummer är inte ett nummer: " + details[0] + ". \n";
                         }
-                        else
-                        {
-                            if (details[0].Length != 4)
-                            {
-                                error += "Fältet Artnummer är inte korrekt längd: " + details[0] + ". \n";
-                            }
-                        }
                         details[2].Replace(',', '.');
                         decimal dvalue = 0;
 
@@ -221,15 +215,26 @@ namespace ShoppingList.Controllers
         {
             RunCheckoutURL(checkoutURL);
 
-            return new EmptyResult();
+            return Redirect("http://www.mathem.se/kassan");
         }
 
         private void RunCheckoutURL(string checkoutURL)
         {
-            //string url = checkoutURL;
-            //HttpWebRequest webReq = (HttpWebRequest)WebRequest.Create(string.Format(url));
-            //webReq.Method = "GET";
-            //HttpWebResponse webResponse = (HttpWebResponse)webReq.GetResponse();
+            //WebClient client = new WebClient();
+            //client.Headers[HttpRequestHeader.ContentType] = "application/x-www-form-urlencoded";
+
+            //string parameters = "productIDs=22403&productCounts=1&productIDs=12425&productCounts=1&productIDs=12425&productCounts=1";
+            //string url = "https://www.mathem.se/externalService.asmx/AddProductsToShoppingCart";
+
+            //var result = client.UploadString(url, parameters);
+
+            //client.Site.                
+
+            WebRequest webReq = WebRequest.Create(string.Format(checkoutURL));
+            webReq.Method = "GET";
+            WebResponse webResponse = webReq.GetResponse();
+
+            string nu = "nu";
         }
     }
 }

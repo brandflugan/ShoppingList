@@ -98,7 +98,7 @@ namespace ShoppingList.DataAccess
 
                         if (count > 0)
                         {
-                            query = "UPDATE Priser SET Produktnamn = @produktnamn, Pris = @pris, Jamforelsepris = @jmf, BildURL = @bildURL " +
+                            query = "UPDATE Priser SET Artikelnummer = @artikelnummer, Produktnamn = @produktnamn, Pris = @pris, Jamforelsepris = @jmf, BildURL = @bildURL " +
                                 "WHERE Artikelnummer = @artnummer AND Foretagsepost = @epost " +
                                 "UPDATE Produkter SET Kategori = @kategori, Typ = @typ, Taggar = @taggar, Mangd = @mangd " +
                                 "WHERE Artikelnummer = @artnummer";
@@ -107,7 +107,7 @@ namespace ShoppingList.DataAccess
                         {
                             query = "INSERT INTO Priser (Artikelnummer, Produktnamn, Pris, Jamforelsepris, BildURL, Foretagsepost) " +
                                 "VALUES(@artnummer, @produktnamn, @pris, @jmf, @bildURL, @epost) " +
-                                "UPDATE Produkter SET Kategori = @kategori, Typ = @typ, Taggar = @taggar, Mangd = @mangd " +
+                                "UPDATE Produkter SET Artikelnummer = @artikelnummer, Kategori = @kategori, Typ = @typ, Taggar = @taggar, Mangd = @mangd " +
                                 "WHERE Artikelnummer = @artnummer";
                         }
                     }
@@ -142,6 +142,7 @@ namespace ShoppingList.DataAccess
                     price = price - (price % 0.01m);
                     jmf = jmf - (jmf % 0.01m);
 
+                    command.Parameters.Add(new SqlParameter("artikelnummer", price));
                     command.Parameters.Add(new SqlParameter("pris", price));
                     command.Parameters.Add(new SqlParameter("jmf", jmf));
                     command.Parameters.Add(new SqlParameter("kategori", details[4]));
