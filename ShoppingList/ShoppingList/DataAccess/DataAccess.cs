@@ -88,7 +88,7 @@ namespace ShoppingList.DataAccess
 
                     if (count > 0)
                     {
-                        query = "SELECT COUNT(*) FROM PRISER WHERE Foretagsepost = @epost AND Artikelnummer = @artnummer";
+                        query = "SELECT COUNT(*) FROM Priser WHERE Foretagsepost = @epost AND Artikelnummer = @artnummer";
 
                         command = new SqlCommand(query, conn);
                         command.Parameters.Add(new SqlParameter("epost", email));
@@ -100,21 +100,21 @@ namespace ShoppingList.DataAccess
                         {
                             query = "UPDATE Priser SET Produktnamn = @produktnamn, Pris = @pris, Jamforelsepris = @jmf, BildURL = @bildURL " +
                                 "WHERE Artikelnummer = @artnummer AND Foretagsepost = @epost " +
-                                "UPDATE Produkter SET Kategori = @kategori, Typ = @typ " +
+                                "UPDATE Produkter SET Kategori = @kategori, Typ = @typ, Taggar = @taggar, Mangd = @mangd " +
                                 "WHERE Artikelnummer = @artnummer";
                         }
                         else
                         {
                             query = "INSERT INTO Priser (Artikelnummer, Produktnamn, Pris, Jamforelsepris, BildURL, Foretagsepost) " +
                                 "VALUES(@artnummer, @produktnamn, @pris, @jmf, @bildURL, @epost) " +
-                                "UPDATE Produkter SET Kategori = @kategori, Typ = @typ " +
+                                "UPDATE Produkter SET Kategori = @kategori, Typ = @typ, Taggar = @taggar, Mangd = @mangd " +
                                 "WHERE Artikelnummer = @artnummer";
                         }
                     }
                     else
                     {
-                        query = "INSERT INTO Produkter(Artikelnummer, Kategori, Typ) " +
-                            "VALUES(@artnummer, @kategori, @typ) " +
+                        query = "INSERT INTO Produkter(Artikelnummer, Kategori, Typ, Taggar, Mangd) " +
+                            "VALUES(@artnummer, @kategori, @typ, @taggar, @mangd) " +
                             "INSERT INTO Priser(Artikelnummer, Produktnamn, Pris, Jamforelsepris, BildURL, Foretagsepost) " +
                             "VALUES(@artnummer, @produktnamn, @pris, @jmf, @bildURL, @epost)";
                     }
@@ -148,6 +148,8 @@ namespace ShoppingList.DataAccess
                     command.Parameters.Add(new SqlParameter("typ", details[5]));
                     command.Parameters.Add(new SqlParameter("bildURL", details[6]));
                     command.Parameters.Add(new SqlParameter("epost", email));
+                    command.Parameters.Add(new SqlParameter("taggar", details[7]));
+                    command.Parameters.Add(new SqlParameter("mangd", GetQuantity(details[1])));
 
                     command.ExecuteNonQuery();
 
@@ -179,7 +181,8 @@ namespace ShoppingList.DataAccess
                 {
                     foreach (var supplier in suppliers)
                     {
-                        query = "SELECT Pris, Jamforelsepris, Produktnamn, BildURL FROM Produkter INNER JOIN Priser ON Produkter.Artikelnummer = Priser.Artikelnummer " +
+                        query =
+                            "SELECT Pris, Jamforelsepris, Produktnamn, BildURL FROM Produkter INNER JOIN Priser ON Produkter.Artikelnummer = Priser.Artikelnummer " +
                             "WHERE Produkter.Artikelnummer = @artikelnummer AND Foretagsepost = @email";
                         command = new SqlCommand(query, conn);
                         command.Parameters.Add(new SqlParameter("artikelnummer", product.Artikelnummer));
@@ -223,13 +226,19 @@ namespace ShoppingList.DataAccess
             var category = product.Kategori;
             var type = product.Typ;
 
-            var query = "SELECT TOP 1 Produktnamn, Pris, Jamforelsepris, BildURL FROM Foretag INNER JOIN Priser ON Epost = Foretagsepost " +
-                "INNER JOIN Produkter on Priser.Artikelnummer = Produkter.Artikelnummer WHERE Epost = @email AND Typ=@typ";
+            //"DECLARE @quantity int " +
+            //             "SET @quantity = @mangd " +
+
+            var query =
+                "SELECT TOP 1 Produktnamn, Pris, Jamforelsepris, BildURL FROM Foretag INNER JOIN Priser ON Epost = Foretagsepost " +
+                "INNER JOIN Produkter on Priser.Artikelnummer = Produkter.Artikelnummer WHERE Epost = @email AND Typ=@typ"
+                + "ORDER BY ABS(Mangd - @mangd)";
 
             SqlCommand command = new SqlCommand(query, conn);
 
             command.Parameters.Add(new SqlParameter("email", supplierEmail));
             command.Parameters.Add(new SqlParameter("typ", product.Typ));
+            command.Parameters.Add(new SqlParameter("mangd", GetQuantity(product.Produktnamn)));
 
             SqlDataReader reader = command.ExecuteReader();
 
@@ -246,7 +255,6 @@ namespace ShoppingList.DataAccess
                     MatchType = MatchType.Replaced,
                     Replaced = product.Produktnamn
                 };
-
             }
             else
             {
@@ -256,18 +264,12 @@ namespace ShoppingList.DataAccess
             return equivalentProduct;
         }
 
-        public double GetQuantity(Product prod)
+        public string GetQuantity(string produktnamn)
         {
-            string[] quantityTypes = { "g", "kg", "ml", "l", "cl", "dl", "-p" };
-            string firstValue = "";
-            string secondValue = null;
-            string currentValue = null;
-            bool multiply = false;
-            var breakout = false;
+            string[] quantityTypes = { "g", "kg", "ml", "l", "cl", "dl", "-p", "st" };
             double value = 0;
-            int counter = 1;
 
-            var details = prod.Produktnamn.Split(' ');
+            var details = produktnamn.Split(' ').ToList();
 
             foreach (var type in quantityTypes)
             {
@@ -277,66 +279,20 @@ namespace ShoppingList.DataAccess
 
                     if (index != -1)
                     {
-                        var character = item.Substring(index - 1, 1);
-                        if (double.TryParse(item.Substring(index - 1, 1), out value))
+                        if (item.Length != 1 && double.TryParse(item.Substring(index - 1, 1), out value))
                         {
-                            while (item.Length > counter)
+                            return item;
+                        }
+                        else if (details.IndexOf(item) != 0)
+                        {
+                            if (double.TryParse(details[details.IndexOf(item) - 1], out value))
                             {
-                                if (double.TryParse(item.Substring(index - counter, 1), out value))
-                                {
-                                    currentValue += value;
-                                }
-                                else if (item.ToLower()[index - counter] == 'x')
-                                {
-                                    multiply = true;
-                                    firstValue = currentValue;
-                                    currentValue = "";
-                                }
-                                else if (item.ToLower()[index - counter] == ',')
-                                {
-                                    firstValue += item.ToLower()[index - counter];
-                                }
-                                counter++;
+                                return details[details.IndexOf(item) - 1] + item;
                             }
-                            breakout = true;
                         }
                     }
-                    if (breakout)
-                    {
-                        break;
-                    }
-                }
-                if (breakout)
-                {
-                    break;
                 }
             }
-
-            double quantity = 0;
-
-            if (multiply)
-            {
-                firstValue = firstValue.Replace(',', '.');
-                secondValue = currentValue.Replace(',', '.');
-                quantity = double.Parse(new string(secondValue.ToCharArray().Reverse().ToArray())) *
-                    double.Parse(new string(firstValue.ToCharArray().Reverse().ToArray()));
-            }
-            else
-            {
-                quantity = double.Parse(new string(currentValue.ToCharArray().Reverse().ToArray()));
-            }
-
-            return quantity;
-        }
-
-        private string GetMatch(Product prod)
-        {
-            string productName = prod.Produktnamn;
-            double quanity = GetQuantity(prod);
-
-
-
-            // string details = productName.Split(' ');
 
             return "";
         }
