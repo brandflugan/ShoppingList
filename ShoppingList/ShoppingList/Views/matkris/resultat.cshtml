@@ -28,22 +28,25 @@
                                                 </div>
                                                 <div class="caption">
                                                     <h2>@supplier.Name</h2>
-                                                    <p><a href="http://www.@supplier.Name/">www.@supplier.Name/</a></p>
-                                                    <p><span class="glyphicon glyphicon-check"></span> Vinnare</p>
+                                                    <p><a href="http://www.@supplier.Name/" target="_blank">www.@supplier.Name/</a></p>
+                                                    @if (Model.IndexOf(supplier) == 0)
+                                                    {
+                                                        <p><span class="glyphicon glyphicon-check"></span> Vinnare</p>
+                                                    }
                                                 </div>
                                                 <div class="modal-footer" style="text-align: left">
                                                     <div class="progress">
-                                                        <div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%;">
-                                                            <span>18 av 32</span>
+                                                        <div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" style="width: @supplier.CalculateMatches()%">
+                                                            <span>@supplier.GetMatched() av @supplier.GetTotal()</span>
                                                         </div>
                                                     </div>
                                                     <div class="row">
-                                                        <div class="col-xs-4"><b>60%</b><br /><small>VAROR</small></div>
-                                                        <div class="col-xs-4"><b>18</b><br /><small>ANTAL</small></div>
+                                                        <div class="col-xs-4"><b>@supplier.CalculateMatches()%</b><br /><small>VAROR</small></div>
+                                                        <div class="col-xs-4"><b>@supplier.GetMatched()</b><br /><small>ANTAL</small></div>
                                                         <div class="col-xs-4"><b>@supplier.TotalCost</b><br /><small>PRIS</small></div>
                                                     </div>
                                                     <div class="row">
-                                                        <div class="col-md-12"><button class="btn btn-default btn-100-width margin-15-top"><span class="glyphicon glyphicon-edit"></span> Ändra varor</button></div>
+                                                        <div class="col-md-12"><button class="btn btn-default btn-100-width margin-15-top"><span class="glyphicon glyphicon-check"></span> Gå till butik</button></div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -66,7 +69,7 @@
                                                                 <span class="product-jmf text-muted small">jmf.pris: <span class="product-jmf">@product.Jmf</span>:-/kg</span>
                                                             </li>
                                                             <li class="list-group-item justify-content-between result-flex-item clearfix">
-                                                                <input id="" class="product-count form-control" type="number" min="1" max="99" value="1" disabled>
+                                                                <input id="" class="product-count form-control" type="number" min="1" max="99" value="@product.Antal" disabled>
                                                                 <span class="text-right text-muted"> st</span>
                                                             </li>
                                                         </ul>

@@ -42,6 +42,11 @@ namespace ShoppingList.Controllers
                     var suppliers = dataAccess.MatchSuppliersWithProducts(products);
 
                     Score.AddProductPrices(suppliers);
+                    foreach (var item in suppliers)
+                    {
+                        item.CalculateScore();
+                    }
+                    suppliers = suppliers.OrderByDescending(s => s.Score).ToList();
 
                     return View(suppliers);
                 }

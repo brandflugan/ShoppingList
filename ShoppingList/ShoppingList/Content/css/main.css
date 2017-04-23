@@ -352,37 +352,31 @@ ul.dropdown-cart {
 }
 
 .flex-item:nth-child(3) {
-    order: 0;
-    flex: 0 0 67px;
-    align-self: auto;
-}
-
-.flex-item:nth-child(4) {
     display: none;
     order: 0;
     flex: 0 1 auto;
     align-self: auto;
 }
 
-.flex-item:nth-child(5) {
+.flex-item:nth-child(4) {
     order: 0;
     flex: 0 0 auto;
     align-self: auto;
 }
 
-    .flex-item:nth-child(5) .form-control {
+    .flex-item:nth-child(4) .form-control {
         display: inline;
         text-align: left;
         width: calc(100% - 16px);
     }
 
-.flex-item:nth-child(6) {
+.flex-item:nth-child(5) {
     order: 0;
     flex: 0 1 auto;
     align-self: auto;
 }
 
-    .flex-item:nth-child(6) input {
+    .flex-item:nth-child(5) input {
         width: 100%;
     }
 
@@ -456,25 +450,19 @@ ul.dropdown-cart {
     }
 
     .flex-item:nth-child(3) {
-        order: 0;
-        flex: 0 0 67px;
-        align-self: auto;
-    }
-
-    .flex-item:nth-child(4) {
         display: inline;
         order: 0;
         flex: 0 0 135px;
         align-self: auto;
     }
 
-    .flex-item:nth-child(5) {
+    .flex-item:nth-child(4) {
         order: 0;
         flex: 0 0 auto;
         align-self: auto;
     }
 
-        .flex-item:nth-child(5) .form-control {
+        .flex-item:nth-child(4) .form-control {
             display: inline;
             width: 48px;
             padding-left: 5px;
@@ -482,7 +470,7 @@ ul.dropdown-cart {
             padding-right: 5px;
         }
 
-    .flex-item:nth-child(6) {
+    .flex-item:nth-child(5) {
         order: 0;
         flex: 0 1 auto;
         align-self: auto;
@@ -550,7 +538,7 @@ ul.dropdown-cart {
     .result-flex-item:nth-child(3) {
         display: inline;
         order: 0;
-        flex: 0 0 135px;
+        flex: 0 0 150px;
         align-self: auto;
         border-right: 0;
     }
@@ -559,7 +547,6 @@ ul.dropdown-cart {
         order: 0;
         flex: 0 0 auto;
         align-self: auto;
-        border-right: 0;
     }
 
         .result-flex-item:nth-child(4) .form-control {
