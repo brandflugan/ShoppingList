@@ -1,10 +1,9 @@
-﻿using HtmlAgilityPack;
+﻿
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Firefox;
 using OpenQA.Selenium.Support.UI;
 using OpenQA.Selenium.PhantomJS;
-using ShoppingList.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,9 +15,9 @@ using OpenQA.Selenium.Interactions;
 
 namespace Crawling
 {
-    class Crawl
+    public class Crawler
     {
-        public void CrawlMSE()
+        public List<Product> CrawlMSE()
         {
             List<Product> products = new List<Product>();
 
@@ -45,22 +44,22 @@ namespace Crawling
             Thread.Sleep(2000);
             jse.ExecuteScript("window.scrollBy(0,600);");
             Thread.Sleep(2000);
-            jse.ExecuteScript("window.scrollBy(0,600);");
-            Thread.Sleep(2000);
-            jse.ExecuteScript("window.scrollBy(0,600);");
-            Thread.Sleep(2000);
-            jse.ExecuteScript("window.scrollBy(0,600);");
-            Thread.Sleep(2000);
-            jse.ExecuteScript("window.scrollBy(0,600);");
-            Thread.Sleep(2000);
-            jse.ExecuteScript("window.scrollBy(0,600);");
-            Thread.Sleep(2000);
-            jse.ExecuteScript("window.scrollBy(0,600);");
-            Thread.Sleep(2000);
-            jse.ExecuteScript("window.scrollBy(0,600);");
-            Thread.Sleep(2000);
-            jse.ExecuteScript("window.scrollBy(0,600);");
-            Thread.Sleep(2000);
+            //jse.ExecuteScript("window.scrollBy(0,600);");
+            //Thread.Sleep(2000);
+            //jse.ExecuteScript("window.scrollBy(0,600);");
+            //Thread.Sleep(2000);
+            //jse.ExecuteScript("window.scrollBy(0,600);");
+            //Thread.Sleep(2000);
+            //jse.ExecuteScript("window.scrollBy(0,600);");
+            //Thread.Sleep(2000);
+            //jse.ExecuteScript("window.scrollBy(0,600);");
+            //Thread.Sleep(2000);
+            //jse.ExecuteScript("window.scrollBy(0,600);");
+            //Thread.Sleep(2000);
+            //jse.ExecuteScript("window.scrollBy(0,600);");
+            //Thread.Sleep(2000);
+            //jse.ExecuteScript("window.scrollBy(0,600);");
+            //Thread.Sleep(2000);
 
             Actions actions = new Actions(driver);
 
@@ -68,40 +67,54 @@ namespace Crawling
 
             Thread.Sleep(2000);
 
-            IReadOnlyCollection<IWebElement> productDivs = driver.FindElements(By.CssSelector(".outer"));
+            IWebElement productList = driver.FindElement(By.CssSelector("#categoryProductResults"));
+            IReadOnlyCollection<IWebElement> productDivs = productList.FindElements(By.CssSelector("li"));
 
-            foreach (IWebElement div in productDivs)
+            foreach (IWebElement li in productDivs)
             {
-                var prod = new Product();
-
-                string text = div.Text;
-                text = text.Replace("\r\n", ";");
-
-                var details = text.Split(';');
-
-                details[0] = details[0].Replace(" :-", string.Empty);
-
-                try
-                {
-                    prod.Pris = decimal.Parse(details[0].Replace('.', ','));
-                }
-                catch
-                {
-                    var pricedetails = details[4].Split(' ');
-
-                    prod.Pris = decimal.Parse(pricedetails[2]);
-                }
-
-                prod.Produktnamn = details[1];
-                prod.Produktnamn += " " + details[2];
-
-                products.Add(prod);
+                products.Add(SetProductDetails(li));
             }
 
-            return;
+            return products;
         }
 
-        public void CrawlMHS()
+        private Product SetProductDetails(IWebElement li)
+        {
+            var prod = new Product();
+
+            prod.Artikelnummer = int.Parse(li.GetAttribute("data-product"));
+
+            IWebElement div = li.FindElement(By.CssSelector(".outer"));
+
+            string text = div.Text;
+            text = text.Replace("\r\n", ";");
+
+            var details = text.Split(';');
+
+            string price = details[0];
+
+            if (price.Split(' ').Length == 4)
+                price = details[4].Split(' ')[2];
+            else if (price.Contains(" :-"))
+                price = details[0].Replace(" :-", string.Empty);
+            else
+                price = price.Insert(price.Length - 2, ",");
+
+            prod.Pris = decimal.Parse(price);
+
+            try
+            {
+                prod.Jmf = decimal.Parse(details[3].Split(' ')[2]);
+            }
+            catch { }
+
+            prod.Produktnamn = details[1];
+            prod.Produktnamn += " " + details[2];
+
+            return prod;
+        }
+
+        public List<Product> CrawlMHS()
         {
             List<Product> products = new List<Product>();
 
@@ -132,18 +145,18 @@ namespace Crawling
             Thread.Sleep(2000);
             jse.ExecuteScript("window.scrollBy(0,600);");
             Thread.Sleep(2000);
-            jse.ExecuteScript("window.scrollBy(0,600);");
-            Thread.Sleep(2000);
-            jse.ExecuteScript("window.scrollBy(0,600);");
-            Thread.Sleep(2000);
-            jse.ExecuteScript("window.scrollBy(0,600);");
-            Thread.Sleep(2000);
-            jse.ExecuteScript("window.scrollBy(0,600);");
-            Thread.Sleep(2000);
-            jse.ExecuteScript("window.scrollBy(0,600);");
-            Thread.Sleep(2000);
-            jse.ExecuteScript("window.scrollBy(0,600);");
-            Thread.Sleep(2000);
+            //jse.ExecuteScript("window.scrollBy(0,600);");
+            //Thread.Sleep(2000);
+            //jse.ExecuteScript("window.scrollBy(0,600);");
+            //Thread.Sleep(2000);
+            //jse.ExecuteScript("window.scrollBy(0,600);");
+            //Thread.Sleep(2000);
+            //jse.ExecuteScript("window.scrollBy(0,600);");
+            //Thread.Sleep(2000);
+            //jse.ExecuteScript("window.scrollBy(0,600);");
+            //Thread.Sleep(2000);
+            //jse.ExecuteScript("window.scrollBy(0,600);");
+            //Thread.Sleep(2000);
 
             Actions actions = new Actions(driver);
 
@@ -168,13 +181,14 @@ namespace Crawling
                 var name = productLink.GetAttribute("title");
                 prod.Produktnamn = name;
 
+                var jmf = div.FindElement(By.CssSelector("span#spnPricePerUnit")).Text;
+                jmf = jmf.Replace("ca ", "");
+                prod.Jmf = decimal.Parse(jmf.Split(' ')[0]);
+
                 products.Add(prod);
             }
 
-            products.Remove(products.First());
-            products.Remove(products.First());
-
-            return;
+            return products;
         }
     }
 }

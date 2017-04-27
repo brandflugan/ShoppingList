@@ -1,4 +1,5 @@
-﻿using ShoppingList.Models;
+﻿using Crawling;
+using ShoppingList.Models;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
@@ -9,8 +10,9 @@ namespace ShoppingList.DataAccess
 {
     public class DataAccess
     {
-        string connectionString = @"Data Source=(localdb)\ProjectsV13;Initial Catalog = MatkrisDB; Integrated Security = True; Connect Timeout = 30; Encrypt=False;TrustServerCertificate=True;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
-        //string connectionString = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=MatkrisDB;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=True;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
+        //string connectionString = @"Data Source=(localdb)\ProjectsV13;Initial Catalog = MatkrisDB; Integrated Security = True; Connect Timeout = 30; Encrypt=False;TrustServerCertificate=True;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
+        string connectionString = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=MatkrisDB;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=True;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
+
         public static void Seed()
         {
 
@@ -150,7 +152,10 @@ namespace ShoppingList.DataAccess
                     command.Parameters.Add(new SqlParameter("bildURL", details[6]));
                     command.Parameters.Add(new SqlParameter("epost", email));
                     command.Parameters.Add(new SqlParameter("taggar", details[7]));
-                    command.Parameters.Add(new SqlParameter("mangd", GetQuantity(details[1])));
+                    var prod = new Product { Produktnamn = details[1] };
+                    SetQuantity(prod);
+                    command.Parameters.Add(new SqlParameter("mangd", prod.Mangd));
+                    command.Parameters.Add(new SqlParameter("mangd", prod.Mangd));
 
                     command.ExecuteNonQuery();
 
@@ -236,7 +241,8 @@ namespace ShoppingList.DataAccess
 
             command.Parameters.Add(new SqlParameter("email", supplierEmail));
             command.Parameters.Add(new SqlParameter("typ", product.Typ));
-            command.Parameters.Add(new SqlParameter("mangd", GetQuantity(product.Produktnamn)));
+            SetQuantity(product);
+            command.Parameters.Add(new SqlParameter("mangd", product));
 
             SqlDataReader reader = command.ExecuteReader();
 
@@ -264,37 +270,132 @@ namespace ShoppingList.DataAccess
             return equivalentProduct;
         }
 
-        public string GetQuantity(string produktnamn)
+        public void SetQuantity(Product product)
         {
             string[] quantityTypes = { "g", "kg", "ml", "l", "cl", "dl", "-p", "st" };
             double value = 0;
 
-            var details = produktnamn.Split(' ').ToList();
+            var details = product.Produktnamn.Split(' ').ToList();
 
             foreach (var type in quantityTypes)
             {
                 foreach (var item in details)
                 {
-                    var index = item.IndexOf(type);
+                    var index = item.ToLower().IndexOf(type);
 
                     if (index != -1)
                     {
-                        if (item.Length != 1 && double.TryParse(item.Substring(index - 1, 1), out value))
+                        try
                         {
-                            return item;
-                        }
-                        else if (details.IndexOf(item) != 0)
-                        {
-                            if (double.TryParse(details[details.IndexOf(item) - 1], out value))
+                            if (item.Length != 1 && double.TryParse(item.Substring(index - 1, 1), out value))
                             {
-                                return details[details.IndexOf(item) - 1] + item;
+                                if (type == "-p")
+                                {
+                                    product.MangdUnit = "-pack";
+                                    product.Mangd = double.Parse(item.Replace("-pack", "").Replace("-p", "").Replace("ca", ""));
+                                }
+                                else
+                                {
+                                    product.MangdUnit = type;
+                                    product.Mangd = double.Parse(item.Replace(type, "").Replace("ca", ""));
+                                }
+
+                            }
+                            else if (details.IndexOf(item) != 0)
+                            {
+                                if (double.TryParse(details[details.IndexOf(item) - 1], out value))
+                                {
+                                    product.Mangd = double.Parse(details[details.IndexOf(item) - 1].Replace("ca", ""));
+                                    if (type == "-p")
+                                        product.MangdUnit = "-pack";
+                                    else
+                                        product.MangdUnit = type;
+                                }
                             }
                         }
+                        catch { }
                     }
                 }
             }
+        }
 
-            return "";
+        private void FindMatch(string productName)
+        {
+            var query = "SELECT * FROM Produkter WHERE Kategori = @category";
+
+            List<Product> products = new List<Product>();
+
+            while (products.Any(p => p.Produktnamn.Split(' ').Length > 1))
+            {
+                foreach (var product in products)
+                {
+                    if (productName == product.Produktnamn)
+                    {
+                        return;
+                    }
+                    else
+                    {
+                        var splitname = product.Produktnamn.Split(' ').ToList();
+                        splitname.Remove(splitname.Last());
+                        product.Produktnamn = string.Join(" ", splitname);
+                    }
+                }
+
+                var namesplit = productName.Split(' ').ToList();
+                namesplit.Remove(namesplit.Last());
+                productName = string.Join(" ", namesplit);
+            }
+        }
+
+        public void SaveProducts(List<Product> products, string supplier)
+        {
+            foreach (var product in products)
+            {
+                string query = "SELECT COUNT(*) FROM Produkter WHERE Artikelnummer = @artikelnummer";
+                int count = 0;
+
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    SqlCommand command = new SqlCommand(query, conn);
+
+                    command.Parameters.Add(new SqlParameter("artikelnummer", product.Artikelnummer));
+
+                    conn.Open();
+
+                    count = (int)command.ExecuteScalar();
+
+                    conn.Close();
+
+                    if (count > 0)
+                    {
+                        query = "UPDATE Priser SET Produktnamn = @produktnamn, Pris = @pris, JMF = @jmf, Mangd = @mangd, enhet = @enhet " +
+                            "WHERE Artikelnummer = @artikelnummer";
+                    }
+                    else
+                    {
+                        query = "INSERT INTO Produkter(Artikelnummer, Produktnamn, Pris, JMF, Mangd, Enhet, Foretagsepost) " +
+                            "VALUES(@produktID, @produktnamn, @pris, @jmf, @mangd, @enhet, @epost)";
+                    }
+
+                    command = new SqlCommand(query, conn);
+
+                    command.Parameters.Add(new SqlParameter("produktID", product.Artikelnummer));
+                    command.Parameters.Add(new SqlParameter("produktnamn", product.Produktnamn));
+                    command.Parameters.Add(new SqlParameter("pris", product.Pris));
+                    command.Parameters.Add(new SqlParameter("jmf", product.Jmf));
+                    SetQuantity(product);
+                    command.Parameters.Add(new SqlParameter("mangd", product.Mangd));
+                    command.Parameters.Add(new SqlParameter("enhet", product.Mangd));
+                    if (count == 0)
+                        command.Parameters.Add(new SqlParameter("epost", supplier));
+
+                    conn.Open();
+
+                    command.ExecuteNonQuery();
+
+                    conn.Close();
+                }
+            }
         }
     }
 }

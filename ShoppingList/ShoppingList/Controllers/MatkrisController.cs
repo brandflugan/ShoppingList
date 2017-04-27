@@ -1,4 +1,5 @@
-﻿using ShoppingList.Models;
+﻿using Crawling;
+using ShoppingList.Models;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -21,7 +22,10 @@ namespace ShoppingList.Controllers
         // GET: Matkris
         public ActionResult index()
         {
-            // var result = dataAccess.GetQuantity(new Models.Product { Produktnamn = "Kycklingfärs Kronfågel, 500g" });
+            var r5 = new Product { Produktnamn = "Avocado 2-pack Ät Direkt Hebes, 320g" };
+            dataAccess.SetQuantity(r5);
+            var r6 = new Product { Produktnamn = "Avocado Hebes, ca160g" };
+            dataAccess.SetQuantity(r6);
 
             return View();
         }

@@ -10,9 +10,9 @@ namespace Crawling
     {
         static void Main(string[] args)
         {
-            Crawl crawl = new Crawl();
+            Crawler crawl = new Crawler();
 
-            crawl.CrawlMSE();
+            crawl.CrawlMHS();
         }
     }
 }
