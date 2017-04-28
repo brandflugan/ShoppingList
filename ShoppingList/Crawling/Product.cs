@@ -15,6 +15,7 @@ namespace Crawling
         public string Typ { get; set; }
         public string BildURL { get; set; }
         public MatchType MatchType { get; set; }
+        public int MatchScore { get; set; }
         public int Antal { get; set; } = 0;
         public string Replaced { get; set; }
         public double Mangd { get; set; }

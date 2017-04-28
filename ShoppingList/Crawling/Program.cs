@@ -12,7 +12,7 @@ namespace Crawling
         {
             Crawler crawl = new Crawler();
 
-            crawl.CrawlMHS();
+            crawl.CrawlMHS("grönsaker");
         }
     }
 }

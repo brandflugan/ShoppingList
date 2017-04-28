@@ -195,6 +195,7 @@
     <ProjectReference Include="..\Crawling\Crawling.csproj">
       <Project>{81863b94-a051-4e8e-b2f4-85aab22c5c06}</Project>
       <Name>Crawling</Name>
+      <Private>True</Private>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>

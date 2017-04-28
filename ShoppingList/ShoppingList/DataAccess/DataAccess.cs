@@ -41,12 +41,39 @@ namespace ShoppingList.DataAccess
             return businessname;
         }
 
+        //public List<Product> GetTopMatchesByName(string term)
+        //{
+        //    List<Product> topProducts = new List<Product>();
+
+        //    var query = "SELECT TOP 5 Produkter.Artikelnummer, min(Produktnamn), min(Pris), min(Jamforelsepris), min(Kategori), " +
+        //        "min(Typ), min(BildURL) FROM Produkter INNER JOIN Priser ON Produkter.Artikelnummer = Priser.Artikelnummer " +
+        //        "WHERE Produktnamn LIKE '%" + @term + "%' GROUP BY Produkter.Artikelnummer";
+
+        //    using (SqlConnection conn = new SqlConnection(connectionString))
+        //    {
+        //        SqlCommand command = new SqlCommand(query, conn);
+        //        command.Parameters.Add(new SqlParameter("term", term));
+
+        //        conn.Open();
+
+        //        var reader = command.ExecuteReader();
+        //        while (reader.Read())
+        //        {
+        //            topProducts.Add(new Product { Artikelnummer = reader.GetInt32(0), Produktnamn = reader.GetString(1), Pris = reader.GetDecimal(2), Jmf = reader.GetDecimal(3), Kategori = reader.GetString(4), Typ = reader.GetString(5), BildURL = reader.GetString(6) });
+        //        }
+
+        //        conn.Close();
+        //    }
+
+        //    return topProducts;
+        //}
+
         public List<Product> GetTopMatchesByName(string term)
         {
             List<Product> topProducts = new List<Product>();
 
-            var query = "SELECT TOP 5 Produkter.Artikelnummer, min(Produktnamn), min(Pris), min(Jamforelsepris), min(Kategori), " +
-                "min(Typ), min(BildURL) FROM Produkter INNER JOIN Priser ON Produkter.Artikelnummer = Priser.Artikelnummer " +
+            var query = "SELECT TOP 5 Produkter.Artikelnummer, min(Produktnamn), min(Pris), min(JMF), min(Kategori), min(Typ), " +
+                "min(BildURL) FROM Produkter " +
                 "WHERE Produktnamn LIKE '%" + @term + "%' GROUP BY Produkter.Artikelnummer";
 
             using (SqlConnection conn = new SqlConnection(connectionString))
@@ -164,6 +191,70 @@ namespace ShoppingList.DataAccess
             }
         }
 
+        //public List<Supplier> MatchSuppliersWithProducts(List<Product> checkoutList)
+        //{
+        //    var query = "SELECT Foretagsnamn, Epost From Foretag";
+        //    List<Supplier> suppliers = new List<Supplier>();
+
+        //    using (SqlConnection conn = new SqlConnection(connectionString))
+        //    {
+        //        SqlCommand command = new SqlCommand(query, conn);
+
+        //        conn.Open();
+        //        SqlDataReader reader = command.ExecuteReader();
+
+        //        while (reader.Read())
+        //        {
+        //            suppliers.Add(new Supplier { Name = reader.GetString(0), Email = reader.GetString(1) });
+        //        }
+
+        //        conn.Close();
+
+        //        foreach (var product in checkoutList)
+        //        {
+        //            foreach (var supplier in suppliers)
+        //            {
+        //                query =
+        //                    "SELECT Priser.Artikelnummer, Pris, Jamforelsepris, Produktnamn, BildURL FROM Produkter INNER JOIN Priser ON Produkter.Artikelnummer = Priser.Artikelnummer " +
+        //                    "WHERE Produkter.Artikelnummer = @artikelnummer AND Foretagsepost = @email";
+        //                command = new SqlCommand(query, conn);
+        //                command.Parameters.Add(new SqlParameter("artikelnummer", product.Artikelnummer));
+        //                command.Parameters.Add(new SqlParameter("email", supplier.Email));
+
+        //                conn.Open();
+        //                reader = command.ExecuteReader();
+
+        //                Product prod;
+
+        //                if (reader.Read())
+        //                {
+        //                    prod = new Product
+        //                    {
+        //                        Artikelnummer = reader.GetInt32(0),
+        //                        Pris = reader.GetDecimal(1),
+        //                        Antal = product.Antal,
+        //                        Jmf = reader.GetDecimal(2),
+        //                        Produktnamn = reader.GetString(3),
+        //                        BildURL = reader.GetString(4),
+        //                        MatchType = MatchType.Match
+        //                    };
+        //                }
+        //                else
+        //                {
+        //                    reader.Close();
+        //                    prod = FindEquivalentProduct(product, supplier.Email, conn);
+        //                }
+
+        //                conn.Close();
+
+        //                supplier.Products.Add(prod);
+        //            }
+        //        }
+        //    }
+
+        //    return suppliers;
+        //}
+
         public List<Supplier> MatchSuppliersWithProducts(List<Product> checkoutList)
         {
             var query = "SELECT Foretagsnamn, Epost From Foretag";
@@ -188,8 +279,9 @@ namespace ShoppingList.DataAccess
                     foreach (var supplier in suppliers)
                     {
                         query =
-                            "SELECT Priser.Artikelnummer, Pris, Jamforelsepris, Produktnamn, BildURL FROM Produkter INNER JOIN Priser ON Produkter.Artikelnummer = Priser.Artikelnummer " +
-                            "WHERE Produkter.Artikelnummer = @artikelnummer AND Foretagsepost = @email";
+                            "SELECT Artikelnummer, Pris, JMF, Produktnamn, BildURL, Kategori FROM Produkter " +
+                            "WHERE Artikelnummer = @artikelnummer AND Foretagsepost = @email";
+
                         command = new SqlCommand(query, conn);
                         command.Parameters.Add(new SqlParameter("artikelnummer", product.Artikelnummer));
                         command.Parameters.Add(new SqlParameter("email", supplier.Email));
@@ -215,7 +307,7 @@ namespace ShoppingList.DataAccess
                         else
                         {
                             reader.Close();
-                            prod = FindEquivalentProduct(product, supplier.Email, conn);
+                            prod = FindMatch(product, supplier);
                         }
 
                         conn.Close();
@@ -293,23 +385,27 @@ namespace ShoppingList.DataAccess
                                 {
                                     product.MangdUnit = "-pack";
                                     product.Mangd = double.Parse(item.Replace("-pack", "").Replace("-p", "").Replace("ca", ""));
+                                    break;
                                 }
                                 else
                                 {
                                     product.MangdUnit = type;
                                     product.Mangd = double.Parse(item.Replace(type, "").Replace("ca", ""));
+                                    break;
                                 }
 
                             }
                             else if (details.IndexOf(item) != 0)
                             {
-                                if (double.TryParse(details[details.IndexOf(item) - 1], out value))
+                                if (double.TryParse(details[details.IndexOf(item) - 1].Replace("ca", ""), out value))
                                 {
-                                    product.Mangd = double.Parse(details[details.IndexOf(item) - 1].Replace("ca", ""));
+                                    details[details.IndexOf(item) - 1] = details[details.IndexOf(item) - 1].Replace("ca", "");
+                                    product.Mangd = double.Parse(details[details.IndexOf(item) - 1]);
                                     if (type == "-p")
                                         product.MangdUnit = "-pack";
                                     else
                                         product.MangdUnit = type;
+                                    break;
                                 }
                             }
                         }
@@ -319,19 +415,65 @@ namespace ShoppingList.DataAccess
             }
         }
 
-        private void FindMatch(string productName)
+        public Product FindMatch(Product zproduct, Supplier supplier)
         {
-            var query = "SELECT * FROM Produkter WHERE Kategori = @category";
+            var query = "SELECT Artikelnummer, Produktnamn, Pris, JMF, BildURL FROM Produkter WHERE Kategori = @kategori AND Foretagsepost = @foretagsepost";
+            var productName = zproduct.Produktnamn;
 
             List<Product> products = new List<Product>();
 
-            while (products.Any(p => p.Produktnamn.Split(' ').Length > 1))
+            using (SqlConnection conn = new SqlConnection(connectionString))
             {
-                foreach (var product in products)
+                SqlCommand command = new SqlCommand(query, conn);
+
+                command.Parameters.Add(new SqlParameter("kategori", zproduct.Kategori));
+                command.Parameters.Add(new SqlParameter("foretagsepost", supplier.Email));
+
+                conn.Open();
+
+                var reader = command.ExecuteReader();
+                while (reader.Read())
                 {
+                    products.Add(new Product
+                    {
+                        Artikelnummer = reader.GetInt32(0),
+                        Produktnamn = reader.GetString(1),
+                        Pris = reader.GetDecimal(2),
+                        Jmf = reader.GetDecimal(3),
+                        BildURL = reader.GetString(4)
+                    });
+                }
+                conn.Close();
+            }
+
+            foreach (var product in products)
+            {
+                string originalname = product.Produktnamn;
+
+                while (productName.Split(' ').Length > 1 && product.Produktnamn.Split(' ').Length > 1)
+                {
+                    int originallength = productName.Split(' ').Length;
+                    int productlength = product.Produktnamn.Split(' ').Length;
+
                     if (productName == product.Produktnamn)
                     {
-                        return;
+                        break;
+                    }
+                    else if (originallength > productlength)
+                    {
+                        var splitname = productName.Split(' ').ToList();
+                        splitname.Remove(splitname.Last());
+                        productName = string.Join(" ", splitname);
+                    }
+                    else if (originallength == productlength)
+                    {
+                        var splitname = productName.Split(' ').ToList();
+                        splitname.Remove(splitname.Last());
+                        productName = string.Join(" ", splitname);
+
+                        splitname = product.Produktnamn.Split(' ').ToList();
+                        splitname.Remove(splitname.Last());
+                        product.Produktnamn = string.Join(" ", splitname);
                     }
                     else
                     {
@@ -339,11 +481,30 @@ namespace ShoppingList.DataAccess
                         splitname.Remove(splitname.Last());
                         product.Produktnamn = string.Join(" ", splitname);
                     }
+                    product.MatchScore++;
                 }
 
-                var namesplit = productName.Split(' ').ToList();
-                namesplit.Remove(namesplit.Last());
-                productName = string.Join(" ", namesplit);
+                if (productName != product.Produktnamn)
+                {
+                    product.MatchScore = -1;
+                }
+
+                product.Produktnamn = originalname;
+                productName = zproduct.Produktnamn;
+            }
+
+            var bestMatch = products.Where(p => p.MatchScore != -1).OrderBy(p => p.MatchScore).FirstOrDefault();
+
+            if (bestMatch != null)
+            {
+                bestMatch.MatchType = MatchType.Replaced;
+                bestMatch.Replaced = zproduct.Produktnamn;
+
+                return bestMatch;
+            }
+            else
+            {
+                return new Product { Produktnamn = zproduct.Produktnamn, MatchType = MatchType.Unavailable, Antal = zproduct.Antal };
             }
         }
 
@@ -368,13 +529,14 @@ namespace ShoppingList.DataAccess
 
                     if (count > 0)
                     {
-                        query = "UPDATE Priser SET Produktnamn = @produktnamn, Pris = @pris, JMF = @jmf, Mangd = @mangd, enhet = @enhet " +
-                            "WHERE Artikelnummer = @artikelnummer";
+                        query = "UPDATE Produkter SET Produktnamn = @produktnamn, Pris = @pris, JMF = @jmf, Mangd = @mangd, enhet = @enhet, " +
+                            "Kategori = @kategori, BildURL = @bild " +
+                            "WHERE Artikelnummer = @produktID AND Foretagsepost = @epost";
                     }
                     else
                     {
-                        query = "INSERT INTO Produkter(Artikelnummer, Produktnamn, Pris, JMF, Mangd, Enhet, Foretagsepost) " +
-                            "VALUES(@produktID, @produktnamn, @pris, @jmf, @mangd, @enhet, @epost)";
+                        query = "INSERT INTO Produkter(Artikelnummer, Produktnamn, Pris, JMF, Mangd, Enhet, Foretagsepost, Kategori, BildURL, Typ) " +
+                            "VALUES(@produktID, @produktnamn, @pris, @jmf, @mangd, @enhet, @epost, @kategori, @bild, '')";
                     }
 
                     command = new SqlCommand(query, conn);
@@ -384,10 +546,16 @@ namespace ShoppingList.DataAccess
                     command.Parameters.Add(new SqlParameter("pris", product.Pris));
                     command.Parameters.Add(new SqlParameter("jmf", product.Jmf));
                     SetQuantity(product);
+                    if (product.Mangd == 0)
+                    {
+                        product.Mangd = 1;
+                        product.MangdUnit = "st";
+                    }
                     command.Parameters.Add(new SqlParameter("mangd", product.Mangd));
-                    command.Parameters.Add(new SqlParameter("enhet", product.Mangd));
-                    if (count == 0)
-                        command.Parameters.Add(new SqlParameter("epost", supplier));
+                    command.Parameters.Add(new SqlParameter("enhet", product.MangdUnit));
+                    command.Parameters.Add(new SqlParameter("epost", supplier));
+                    command.Parameters.Add(new SqlParameter("kategori", product.Kategori));
+                    command.Parameters.Add(new SqlParameter("bild", product.BildURL));
 
                     conn.Open();
 

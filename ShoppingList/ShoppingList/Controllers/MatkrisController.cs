@@ -22,11 +22,6 @@ namespace ShoppingList.Controllers
         // GET: Matkris
         public ActionResult index()
         {
-            var r5 = new Product { Produktnamn = "Avocado 2-pack Ät Direkt Hebes, 320g" };
-            dataAccess.SetQuantity(r5);
-            var r6 = new Product { Produktnamn = "Avocado Hebes, ca160g" };
-            dataAccess.SetQuantity(r6);
-
             return View();
         }
 

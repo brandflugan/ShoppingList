@@ -19,18 +19,22 @@ namespace ShoppingList.Controllers
             return View();
         }
 
-        public void MSE()
+        public ActionResult MSE()
         {
-            var products = crawler.CrawlMSE();
+            var products = crawler.CrawlMSE("grönsaker");
 
             dataAccess.SaveProducts(products, "mat@gmail.se");
+
+            return RedirectToAction("/index");
         }
 
-        public void MHS()
+        public ActionResult MHS()
         {
-            var products = crawler.CrawlMHS();
+            var products = crawler.CrawlMHS("grönsaker");
 
             dataAccess.SaveProducts(products, "mathem@gmail.se");
+
+            return RedirectToAction("/index");
         }
     }
 }

@@ -17,14 +17,14 @@ namespace Crawling
 {
     public class Crawler
     {
-        public List<Product> CrawlMSE()
+        public List<Product> CrawlMSE(string category)
         {
             List<Product> products = new List<Product>();
 
             IWebDriver driver = new ChromeDriver();
 
             driver.Manage().Timeouts().PageLoad = TimeSpan.FromSeconds(10);
-            driver.Navigate().GoToUrl("https://www.mat.se/search.html?q=gr%C3%B6nsaker");
+            driver.Navigate().GoToUrl("https://www.mat.se/search.html?q=" + category);
             driver.Manage().Window.Maximize();
 
             var jse = (IJavaScriptExecutor)driver; ;
@@ -72,13 +72,15 @@ namespace Crawling
 
             foreach (IWebElement li in productDivs)
             {
-                products.Add(SetProductDetails(li));
+                products.Add(SetProductDetails(li, category));
             }
+
+            driver.Quit();
 
             return products;
         }
 
-        private Product SetProductDetails(IWebElement li)
+        private Product SetProductDetails(IWebElement li, string category)
         {
             var prod = new Product();
 
@@ -111,17 +113,22 @@ namespace Crawling
             prod.Produktnamn = details[1];
             prod.Produktnamn += " " + details[2];
 
+            var img = div.FindElement(By.CssSelector("img"));
+            prod.BildURL = img.GetAttribute("src");
+
+            prod.Kategori = category;
+
             return prod;
         }
 
-        public List<Product> CrawlMHS()
+        public List<Product> CrawlMHS(string category)
         {
             List<Product> products = new List<Product>();
 
             IWebDriver driver = new ChromeDriver();
 
             driver.Manage().Timeouts().PageLoad = TimeSpan.FromSeconds(10);
-            driver.Navigate().GoToUrl("https://www.mathem.se/sok?q=gr%C3%B6nsaker");
+            driver.Navigate().GoToUrl("https://www.mathem.se/sok?q=" + category);
             driver.Manage().Window.Maximize();
 
             var jse = (IJavaScriptExecutor)driver; ;
@@ -185,8 +192,15 @@ namespace Crawling
                 jmf = jmf.Replace("ca ", "");
                 prod.Jmf = decimal.Parse(jmf.Split(' ')[0]);
 
+                var img = div.FindElement(By.CssSelector("img"));
+                prod.BildURL = img.GetAttribute("src");
+
+                prod.Kategori = category;
+
                 products.Add(prod);
             }
+
+            driver.Quit();
 
             return products;
         }
