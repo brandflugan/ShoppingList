@@ -211,30 +211,28 @@ namespace ShoppingList.Controllers
             return Json(productList, JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult checkout(string supplierID, string checkoutURL)
-        {
-            RunCheckoutURL(checkoutURL);
+        //public ActionResult checkout(string supplierID, string checkoutURL)
+        //{
+        //    RunCheckoutURL(checkoutURL);
 
-            return Redirect("http://www.mathem.se/kassan");
-        }
+        //    return Redirect("http://www.mathem.se/kassan");
+        //}
 
-        private void RunCheckoutURL(string checkoutURL)
-        {
-            //WebClient client = new WebClient();
-            //client.Headers[HttpRequestHeader.ContentType] = "application/x-www-form-urlencoded";
+        //private void RunCheckoutURL(string checkoutURL)
+        //{
+        //    //WebClient client = new WebClient();
+        //    //client.Headers[HttpRequestHeader.ContentType] = "application/x-www-form-urlencoded";
 
-            //string parameters = "productIDs=22403&productCounts=1&productIDs=12425&productCounts=1&productIDs=12425&productCounts=1";
-            //string url = "https://www.mathem.se/externalService.asmx/AddProductsToShoppingCart";
+        //    //string parameters = "productIDs=22403&productCounts=1&productIDs=12425&productCounts=1&productIDs=12425&productCounts=1";
+        //    //string url = "https://www.mathem.se/externalService.asmx/AddProductsToShoppingCart";
 
-            //var result = client.UploadString(url, parameters);
+        //    //var result = client.UploadString(url, parameters);
 
-            //client.Site.                
+        //    //client.Site.             
 
-            WebRequest webReq = WebRequest.Create(string.Format(checkoutURL));
-            webReq.Method = "GET";
-            WebResponse webResponse = webReq.GetResponse();
-
-            string nu = "nu";
-        }
+        //    //WebRequest webReq = WebRequest.Create(string.Format(checkoutURL));
+        //    //webReq.Method = "GET";
+        //    //WebResponse webResponse = webReq.GetResponse();
+        //}
     }
 }

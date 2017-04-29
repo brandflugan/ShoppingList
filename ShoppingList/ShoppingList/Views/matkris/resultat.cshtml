@@ -99,3 +99,50 @@
     </div>
 
 </div>
+
+<script>
+    @*var suppliers = @Html.Raw(Json.Encode(Model))
+
+    function checkout(supplierName) {
+
+        var supplier = getSupplier(supplierName);
+        var checkoutURL;
+
+        switch (supplier.Name) {
+            case "mathem.se":
+                checkoutURL = GetMathemCheckoutURL(supplier);
+        }
+
+        alert(checkoutURL);
+
+        $.ajax({
+            url: checkoutURL,
+            type: "GET",
+            success: function (response) {
+                window.location.href = "https://www.mathem.se/kassan"
+            }
+        });
+    };
+
+    function getSupplier(supplierName) {
+        for (i = 0; i < suppliers.length; i++) {
+            if (suppliers[i].Name == supplierName) {
+                return suppliers[i];
+            }
+        }
+    }
+
+    function GetMathemCheckoutURL(supplier) {
+        var checkoutURL = "https://www.mathem.se/externalService.asmx/AddProductsToShoppingCart?"
+        var products = supplier.Products;
+
+        for (i = 0; i < products.length; i++) {
+            checkoutURL += "productIDs=" + products[i].Artikelnummer + "&productCounts=" + products[i].Antal;
+            if (i < (products.length - 1)) {
+                checkoutURL += "&";
+            }
+        }
+
+        return checkoutURL;
+    }*@
+</script>
