@@ -85,6 +85,8 @@ namespace Crawling
                 price = price.Insert(price.Length - 2, ",");
 
             price = price.Replace(" ", "");
+            price = price.Replace(",", ".");
+
             prod.Pris = decimal.Parse(price);
 
             prod.Jmf = decimal.Parse(details[3].Split(' ')[2].Replace(',', '.'));
@@ -92,7 +94,7 @@ namespace Crawling
             prod.Produktnamn = details[1];
             prod.Produktnamn += " " + details[2];
 
-            var img = div.FindElement(By.CssSelector("img"));
+            var img = div.FindElement(By.CssSelector(".product-image"));
             prod.BildURL = img.GetAttribute("src");
 
             prod.Kategori = category;
@@ -138,7 +140,7 @@ namespace Crawling
                 var id = div.GetAttribute("data-product-div-id");
                 prod.Artikelnummer = int.Parse(id);
 
-                var price = div.GetAttribute("data-price").Replace('.', ',');
+                var price = div.GetAttribute("data-price");
                 prod.Pris = decimal.Parse(price);
 
                 var productLink = div.FindElement(By.CssSelector("a.fancybox-product"));
@@ -148,9 +150,11 @@ namespace Crawling
 
                 var jmf = div.FindElement(By.CssSelector("span#spnPricePerUnit")).Text;
                 jmf = jmf.Replace("ca ", "");
+                jmf = jmf.Replace(",", ".");
+
                 prod.Jmf = decimal.Parse(jmf.Split(' ')[0]);
 
-                var img = div.FindElement(By.CssSelector("img"));
+                var img = div.FindElement(By.CssSelector(".lazy"));
                 prod.BildURL = img.GetAttribute("src");
 
                 prod.Kategori = category;
