@@ -126,9 +126,10 @@ namespace ShoppingList.Controllers
                 if (errors.Count == 0)
                 {
                     var identity = (ClaimsIdentity)User.Identity;
-                    string businessemail = identity.Claims.Where(c => c.Type == ClaimTypes.Email).Select(c => c.Value).SingleOrDefault();
+                    string supplierEmail = identity.Claims.Where(c => c.Type == ClaimTypes.Email).Select(c => c.Value).SingleOrDefault();
 
-                    dataAccess.UpdateProductlist(lines, businessemail);
+                    var products = dataAccess.CreateProductlist(lines);
+                    dataAccess.SaveProducts(products, supplierEmail);
                 }
             }
             else

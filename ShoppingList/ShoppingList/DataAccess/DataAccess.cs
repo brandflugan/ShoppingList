@@ -10,13 +10,8 @@ namespace ShoppingList.DataAccess
 {
     public class DataAccess
     {
-        //string connectionString = @"Data Source=(localdb)\ProjectsV13;Initial Catalog = MatkrisDB; Integrated Security = True; Connect Timeout = 30; Encrypt=False;TrustServerCertificate=True;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
-        string connectionString = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=MatkrisDB;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=True;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
-
-        public static void Seed()
-        {
-
-        }
+        string connectionString = @"Data Source=(localdb)\ProjectsV13;Initial Catalog = MatkrisDB; Integrated Security = True; Connect Timeout = 30; Encrypt=False;TrustServerCertificate=True;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
+        //string connectionString = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=MatkrisDB;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=True;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
 
         public string ValidateUser(string email, string password)
         {
@@ -95,101 +90,143 @@ namespace ShoppingList.DataAccess
             return topProducts;
         }
 
-        public void UpdateProductlist(List<string> productlist, string email)
+        public List<Product> CreateProductlist(List<string> products)
         {
-            productlist.RemoveAt(0);
+            products.RemoveAt(0);
+            List<Product> productlist = new List<Product>();
 
-            foreach (var product in productlist)
+            foreach (var product in products)
             {
                 var details = product.Split(';');
 
-                var query = "SELECT COUNT(*) FROM Produkter WHERE Artikelnummer = @artnummer";
-
-                using (SqlConnection conn = new SqlConnection(connectionString))
+                decimal price;
+                decimal jmf;
+                try
                 {
-                    SqlCommand command = new SqlCommand(query, conn);
-                    command.Parameters.Add(new SqlParameter("epost", email));
-                    command.Parameters.Add(new SqlParameter("artnummer", int.Parse(details[0])));
-
-                    conn.Open();
-
-                    int count = (int)command.ExecuteScalar();
-
-                    if (count > 0)
-                    {
-                        query = "SELECT COUNT(*) FROM Priser WHERE Foretagsepost = @epost AND Artikelnummer = @artnummer";
-
-                        command = new SqlCommand(query, conn);
-                        command.Parameters.Add(new SqlParameter("epost", email));
-                        command.Parameters.Add(new SqlParameter("artnummer", int.Parse(details[0])));
-
-                        count = (int)command.ExecuteScalar();
-
-                        if (count > 0)
-                        {
-                            query = "UPDATE Priser SET Artikelnummer = @artikelnummer, Produktnamn = @produktnamn, Pris = @pris, Jamforelsepris = @jmf, BildURL = @bildURL " +
-                                "WHERE Artikelnummer = @artnummer AND Foretagsepost = @epost " +
-                                "UPDATE Produkter SET Kategori = @kategori, Typ = @typ, Taggar = @taggar, Mangd = @mangd " +
-                                "WHERE Artikelnummer = @artnummer";
-                        }
-                        else
-                        {
-                            query = "INSERT INTO Priser (Artikelnummer, Produktnamn, Pris, Jamforelsepris, BildURL, Foretagsepost) " +
-                                "VALUES(@artnummer, @produktnamn, @pris, @jmf, @bildURL, @epost) " +
-                                "UPDATE Produkter SET Artikelnummer = @artikelnummer, Kategori = @kategori, Typ = @typ, Taggar = @taggar, Mangd = @mangd " +
-                                "WHERE Artikelnummer = @artnummer";
-                        }
-                    }
-                    else
-                    {
-                        query = "INSERT INTO Produkter(Artikelnummer, Kategori, Typ, Taggar, Mangd) " +
-                            "VALUES(@artnummer, @kategori, @typ, @taggar, @mangd) " +
-                            "INSERT INTO Priser(Artikelnummer, Produktnamn, Pris, Jamforelsepris, BildURL, Foretagsepost) " +
-                            "VALUES(@artnummer, @produktnamn, @pris, @jmf, @bildURL, @epost)";
-                    }
-
-                    command = new SqlCommand(query, conn);
-
-                    decimal price;
-                    decimal jmf;
-                    try
-                    {
-                        string replacePrice = details[2].Replace(',', '.');
-                        string replaceJmf = details[3].Replace(',', '.');
-                        price = decimal.Parse(replacePrice);
-                        jmf = decimal.Parse(replaceJmf);
-                    }
-                    catch (Exception)
-                    {
-                        price = decimal.Parse(details[2]);
-                        jmf = decimal.Parse(details[3]);
-                    }
-
-                    command.Parameters.Add(new SqlParameter("artnummer", details[0]));
-                    command.Parameters.Add(new SqlParameter("produktnamn", details[1]));
-
-                    price = price - (price % 0.01m);
-                    jmf = jmf - (jmf % 0.01m);
-
-                    command.Parameters.Add(new SqlParameter("artikelnummer", price));
-                    command.Parameters.Add(new SqlParameter("pris", price));
-                    command.Parameters.Add(new SqlParameter("jmf", jmf));
-                    command.Parameters.Add(new SqlParameter("kategori", details[4]));
-                    command.Parameters.Add(new SqlParameter("typ", details[5]));
-                    command.Parameters.Add(new SqlParameter("bildURL", details[6]));
-                    command.Parameters.Add(new SqlParameter("epost", email));
-                    command.Parameters.Add(new SqlParameter("taggar", details[7]));
-                    var prod = new Product { Produktnamn = details[1] };
-                    SetQuantity(prod);
-                    command.Parameters.Add(new SqlParameter("mangd", prod.Mangd));
-                    command.Parameters.Add(new SqlParameter("mangd", prod.Mangd));
-
-                    command.ExecuteNonQuery();
-
-                    conn.Close();
+                    string replacePrice = details[2].Replace(',', '.');
+                    string replaceJmf = details[3].Replace(',', '.');
+                    price = decimal.Parse(replacePrice);
+                    jmf = decimal.Parse(replaceJmf);
                 }
+                catch (Exception)
+                {
+                    price = decimal.Parse(details[2]);
+                    jmf = decimal.Parse(details[3]);
+                }
+
+                var prod = new Product
+                {
+                    Artikelnummer = int.Parse(details[0]),
+                    Produktnamn = details[1],
+                    Pris = price,
+                    Jmf = jmf,
+                    Kategori = details[4],
+                    Typ = details[5],
+                    BildURL = details[6]
+                };
+
+                productlist.Add(prod);
+
             }
+
+            return productlist;
         }
+
+        //public void UpdateProductlist(List<string> productlist, string email)
+        //{
+        //    productlist.RemoveAt(0);
+
+        //    foreach (var product in productlist)
+        //    {
+        //        var details = product.Split(';');
+
+        //        var query = "SELECT COUNT(*) FROM Produkter WHERE Artikelnummer = @artnummer";
+
+        //        using (SqlConnection conn = new SqlConnection(connectionString))
+        //        {
+        //            SqlCommand command = new SqlCommand(query, conn);
+        //            command.Parameters.Add(new SqlParameter("epost", email));
+        //            command.Parameters.Add(new SqlParameter("artnummer", int.Parse(details[0])));
+
+        //            conn.Open();
+
+        //            int count = (int)command.ExecuteScalar();
+
+        //            if (count > 0)
+        //            {
+        //                query = "SELECT COUNT(*) FROM Priser WHERE Foretagsepost = @epost AND Artikelnummer = @artnummer";
+
+        //                command = new SqlCommand(query, conn);
+        //                command.Parameters.Add(new SqlParameter("epost", email));
+        //                command.Parameters.Add(new SqlParameter("artnummer", int.Parse(details[0])));
+
+        //                count = (int)command.ExecuteScalar();
+
+        //                if (count > 0)
+        //                {
+        //                    query = "UPDATE Priser SET Artikelnummer = @artikelnummer, Produktnamn = @produktnamn, Pris = @pris, Jamforelsepris = @jmf, BildURL = @bildURL " +
+        //                        "WHERE Artikelnummer = @artnummer AND Foretagsepost = @epost " +
+        //                        "UPDATE Produkter SET Kategori = @kategori, Typ = @typ, Taggar = @taggar, Mangd = @mangd " +
+        //                        "WHERE Artikelnummer = @artnummer";
+        //                }
+        //                else
+        //                {
+        //                    query = "INSERT INTO Priser (Artikelnummer, Produktnamn, Pris, Jamforelsepris, BildURL, Foretagsepost) " +
+        //                        "VALUES(@artnummer, @produktnamn, @pris, @jmf, @bildURL, @epost) " +
+        //                        "UPDATE Produkter SET Artikelnummer = @artikelnummer, Kategori = @kategori, Typ = @typ, Taggar = @taggar, Mangd = @mangd " +
+        //                        "WHERE Artikelnummer = @artnummer";
+        //                }
+        //            }
+        //            else
+        //            {
+        //                query = "INSERT INTO Produkter(Artikelnummer, Kategori, Typ, Taggar, Mangd) " +
+        //                    "VALUES(@artnummer, @kategori, @typ, @taggar, @mangd) " +
+        //                    "INSERT INTO Priser(Artikelnummer, Produktnamn, Pris, Jamforelsepris, BildURL, Foretagsepost) " +
+        //                    "VALUES(@artnummer, @produktnamn, @pris, @jmf, @bildURL, @epost)";
+        //            }
+
+        //            command = new SqlCommand(query, conn);
+
+        //            decimal price;
+        //            decimal jmf;
+        //            try
+        //            {
+        //                string replacePrice = details[2].Replace(',', '.');
+        //                string replaceJmf = details[3].Replace(',', '.');
+        //                price = decimal.Parse(replacePrice);
+        //                jmf = decimal.Parse(replaceJmf);
+        //            }
+        //            catch (Exception)
+        //            {
+        //                price = decimal.Parse(details[2]);
+        //                jmf = decimal.Parse(details[3]);
+        //            }
+
+        //            command.Parameters.Add(new SqlParameter("artnummer", details[0]));
+        //            command.Parameters.Add(new SqlParameter("produktnamn", details[1]));
+
+        //            price = price - (price % 0.01m);
+        //            jmf = jmf - (jmf % 0.01m);
+
+        //            command.Parameters.Add(new SqlParameter("artikelnummer", price));
+        //            command.Parameters.Add(new SqlParameter("pris", price));
+        //            command.Parameters.Add(new SqlParameter("jmf", jmf));
+        //            command.Parameters.Add(new SqlParameter("kategori", details[4]));
+        //            command.Parameters.Add(new SqlParameter("typ", details[5]));
+        //            command.Parameters.Add(new SqlParameter("bildURL", details[6]));
+        //            command.Parameters.Add(new SqlParameter("epost", email));
+        //            command.Parameters.Add(new SqlParameter("taggar", details[7]));
+        //            var prod = new Product { Produktnamn = details[1] };
+        //            SetQuantity(prod);
+        //            command.Parameters.Add(new SqlParameter("mangd", prod.Mangd));
+        //            command.Parameters.Add(new SqlParameter("mangd", prod.Mangd));
+
+        //            command.ExecuteNonQuery();
+
+        //            conn.Close();
+        //        }
+        //    }
+        //}
 
         //public List<Supplier> MatchSuppliersWithProducts(List<Product> checkoutList)
         //{
@@ -320,47 +357,47 @@ namespace ShoppingList.DataAccess
             return suppliers;
         }
 
-        private Product FindEquivalentProduct(Product product, string supplierEmail, SqlConnection conn)
-        {
-            var category = product.Kategori;
-            var type = product.Typ;
+        //private Product FindEquivalentProduct(Product product, string supplierEmail, SqlConnection conn)
+        //{
+        //    var category = product.Kategori;
+        //    var type = product.Typ;
 
-            var query =
-                "SELECT TOP 1 Priser.Artikelnummer, Produktnamn, Pris, Jamforelsepris, BildURL FROM Foretag INNER JOIN Priser ON Epost = Foretagsepost " +
-                "INNER JOIN Produkter on Priser.Artikelnummer = Produkter.Artikelnummer WHERE Epost = @email AND Typ=@typ";
+        //    var query =
+        //        "SELECT TOP 1 Priser.Artikelnummer, Produktnamn, Pris, Jamforelsepris, BildURL FROM Foretag INNER JOIN Priser ON Epost = Foretagsepost " +
+        //        "INNER JOIN Produkter on Priser.Artikelnummer = Produkter.Artikelnummer WHERE Epost = @email AND Typ=@typ";
 
-            SqlCommand command = new SqlCommand(query, conn);
+        //    SqlCommand command = new SqlCommand(query, conn);
 
-            command.Parameters.Add(new SqlParameter("email", supplierEmail));
-            command.Parameters.Add(new SqlParameter("typ", product.Typ));
-            SetQuantity(product);
-            command.Parameters.Add(new SqlParameter("mangd", product));
+        //    command.Parameters.Add(new SqlParameter("email", supplierEmail));
+        //    command.Parameters.Add(new SqlParameter("typ", product.Typ));
+        //    SetQuantity(product);
+        //    command.Parameters.Add(new SqlParameter("mangd", product));
 
-            SqlDataReader reader = command.ExecuteReader();
+        //    SqlDataReader reader = command.ExecuteReader();
 
-            Product equivalentProduct = null;
+        //    Product equivalentProduct = null;
 
-            if (reader.Read())
-            {
-                equivalentProduct = new Product
-                {
-                    Artikelnummer = reader.GetInt32(0),
-                    Produktnamn = reader.GetString(1),
-                    Pris = reader.GetDecimal(2),
-                    Jmf = reader.GetDecimal(3),
-                    BildURL = reader.GetString(4),
-                    MatchType = MatchType.Replaced,
-                    Replaced = product.Produktnamn,
-                    Antal = product.Antal
-                };
-            }
-            else
-            {
-                equivalentProduct = new Product { Produktnamn = product.Produktnamn, MatchType = MatchType.Unavailable, Antal = product.Antal };
-            }
+        //    if (reader.Read())
+        //    {
+        //        equivalentProduct = new Product
+        //        {
+        //            Artikelnummer = reader.GetInt32(0),
+        //            Produktnamn = reader.GetString(1),
+        //            Pris = reader.GetDecimal(2),
+        //            Jmf = reader.GetDecimal(3),
+        //            BildURL = reader.GetString(4),
+        //            MatchType = MatchType.Replaced,
+        //            Replaced = product.Produktnamn,
+        //            Antal = product.Antal
+        //        };
+        //    }
+        //    else
+        //    {
+        //        equivalentProduct = new Product { Produktnamn = product.Produktnamn, MatchType = MatchType.Unavailable, Antal = product.Antal };
+        //    }
 
-            return equivalentProduct;
-        }
+        //    return equivalentProduct;
+        //}
 
         public void SetQuantity(Product product)
         {
@@ -415,10 +452,10 @@ namespace ShoppingList.DataAccess
             }
         }
 
-        public Product FindMatch(Product zproduct, Supplier supplier)
+        public Product FindMatch(Product unmatchedProduct, Supplier supplier)
         {
             var query = "SELECT Artikelnummer, Produktnamn, Pris, JMF, BildURL FROM Produkter WHERE Kategori = @kategori AND Foretagsepost = @foretagsepost";
-            var productName = zproduct.Produktnamn;
+            var productName = unmatchedProduct.Produktnamn;
 
             List<Product> products = new List<Product>();
 
@@ -426,7 +463,7 @@ namespace ShoppingList.DataAccess
             {
                 SqlCommand command = new SqlCommand(query, conn);
 
-                command.Parameters.Add(new SqlParameter("kategori", zproduct.Kategori));
+                command.Parameters.Add(new SqlParameter("kategori", unmatchedProduct.Kategori));
                 command.Parameters.Add(new SqlParameter("foretagsepost", supplier.Email));
 
                 conn.Open();
@@ -490,7 +527,7 @@ namespace ShoppingList.DataAccess
                 }
 
                 product.Produktnamn = originalname;
-                productName = zproduct.Produktnamn;
+                productName = unmatchedProduct.Produktnamn;
             }
 
             var bestMatch = products.Where(p => p.MatchScore != -1).OrderBy(p => p.MatchScore).FirstOrDefault();
@@ -498,13 +535,14 @@ namespace ShoppingList.DataAccess
             if (bestMatch != null)
             {
                 bestMatch.MatchType = MatchType.Replaced;
-                bestMatch.Replaced = zproduct.Produktnamn;
+                bestMatch.Replaced = unmatchedProduct.Produktnamn;
+                bestMatch.Antal = unmatchedProduct.Antal;
 
                 return bestMatch;
             }
             else
             {
-                return new Product { Produktnamn = zproduct.Produktnamn, MatchType = MatchType.Unavailable, Antal = zproduct.Antal };
+                return new Product { Produktnamn = unmatchedProduct.Produktnamn, MatchType = MatchType.Unavailable, Antal = unmatchedProduct.Antal };
             }
         }
 

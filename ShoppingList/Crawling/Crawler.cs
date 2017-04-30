@@ -31,35 +31,13 @@ namespace Crawling
 
             WebDriverWait wait = new WebDriverWait(driver, new TimeSpan(0, 0, 6));
 
+            for (int i = 0; i < 10; i++)
+            {
+                Thread.Sleep(2000);
+                jse.ExecuteScript("window.scrollBy(0,600);");
+            }
+
             Thread.Sleep(2000);
-            jse.ExecuteScript("window.scrollBy(0,600);");
-            Thread.Sleep(2000);
-            jse.ExecuteScript("window.scrollBy(0,600);");
-            Thread.Sleep(2000);
-            jse.ExecuteScript("window.scrollBy(0,600);");
-            Thread.Sleep(2000);
-            jse.ExecuteScript("window.scrollBy(0,600);");
-            Thread.Sleep(2000);
-            jse.ExecuteScript("window.scrollBy(0,600);");
-            Thread.Sleep(2000);
-            jse.ExecuteScript("window.scrollBy(0,600);");
-            Thread.Sleep(2000);
-            //jse.ExecuteScript("window.scrollBy(0,600);");
-            //Thread.Sleep(2000);
-            //jse.ExecuteScript("window.scrollBy(0,600);");
-            //Thread.Sleep(2000);
-            //jse.ExecuteScript("window.scrollBy(0,600);");
-            //Thread.Sleep(2000);
-            //jse.ExecuteScript("window.scrollBy(0,600);");
-            //Thread.Sleep(2000);
-            //jse.ExecuteScript("window.scrollBy(0,600);");
-            //Thread.Sleep(2000);
-            //jse.ExecuteScript("window.scrollBy(0,600);");
-            //Thread.Sleep(2000);
-            //jse.ExecuteScript("window.scrollBy(0,600);");
-            //Thread.Sleep(2000);
-            //jse.ExecuteScript("window.scrollBy(0,600);");
-            //Thread.Sleep(2000);
 
             Actions actions = new Actions(driver);
 
@@ -135,35 +113,14 @@ namespace Crawling
 
             WebDriverWait wait = new WebDriverWait(driver, new TimeSpan(0, 0, 6));
 
+
+            for (int i = 0; i < 10; i++)
+            {
+                Thread.Sleep(2000);
+                jse.ExecuteScript("window.scrollBy(0,600);");
+            }
+
             Thread.Sleep(2000);
-            jse.ExecuteScript("window.scrollBy(0,600);");
-            Thread.Sleep(2000);
-            jse.ExecuteScript("window.scrollBy(0,600);");
-            Thread.Sleep(2000);
-            jse.ExecuteScript("window.scrollBy(0,600);");
-            Thread.Sleep(2000);
-            jse.ExecuteScript("window.scrollBy(0,600);");
-            Thread.Sleep(2000);
-            jse.ExecuteScript("window.scrollBy(0,600);");
-            Thread.Sleep(2000);
-            jse.ExecuteScript("window.scrollBy(0,600);");
-            Thread.Sleep(2000);
-            jse.ExecuteScript("window.scrollBy(0,600);");
-            Thread.Sleep(2000);
-            jse.ExecuteScript("window.scrollBy(0,600);");
-            Thread.Sleep(2000);
-            //jse.ExecuteScript("window.scrollBy(0,600);");
-            //Thread.Sleep(2000);
-            //jse.ExecuteScript("window.scrollBy(0,600);");
-            //Thread.Sleep(2000);
-            //jse.ExecuteScript("window.scrollBy(0,600);");
-            //Thread.Sleep(2000);
-            //jse.ExecuteScript("window.scrollBy(0,600);");
-            //Thread.Sleep(2000);
-            //jse.ExecuteScript("window.scrollBy(0,600);");
-            //Thread.Sleep(2000);
-            //jse.ExecuteScript("window.scrollBy(0,600);");
-            //Thread.Sleep(2000);
 
             Actions actions = new Actions(driver);
 
