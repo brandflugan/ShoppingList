@@ -1,4 +1,5 @@
-﻿using ShoppingList.Models;
+﻿using Crawling;
+using ShoppingList.Models;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -21,8 +22,6 @@ namespace ShoppingList.Controllers
         // GET: Matkris
         public ActionResult index()
         {
-            // var result = dataAccess.GetQuantity(new Models.Product { Produktnamn = "Kycklingfärs Kronfågel, 500g" });
-
             return View();
         }
 
@@ -127,9 +126,10 @@ namespace ShoppingList.Controllers
                 if (errors.Count == 0)
                 {
                     var identity = (ClaimsIdentity)User.Identity;
-                    string businessemail = identity.Claims.Where(c => c.Type == ClaimTypes.Email).Select(c => c.Value).SingleOrDefault();
+                    string supplierEmail = identity.Claims.Where(c => c.Type == ClaimTypes.Email).Select(c => c.Value).SingleOrDefault();
 
-                    dataAccess.UpdateProductlist(lines, businessemail);
+                    var products = dataAccess.CreateProductlist(lines);
+                    dataAccess.SaveProducts(products, supplierEmail);
                 }
             }
             else
@@ -211,29 +211,28 @@ namespace ShoppingList.Controllers
             return Json(productList, JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult checkout(string supplierID, string checkoutURL)
-        {
-            RunCheckoutURL(checkoutURL);
+        //public ActionResult checkout(string supplierID, string checkoutURL)
+        //{
+        //    RunCheckoutURL(checkoutURL);
 
-            return Redirect("http://www.mathem.se/kassan");
-        }
+        //    return Redirect("http://www.mathem.se/kassan");
+        //}
 
-        private void RunCheckoutURL(string checkoutURL)
-        {
-            //WebClient client = new WebClient();
-            //client.Headers[HttpRequestHeader.ContentType] = "application/x-www-form-urlencoded";
+        //private void RunCheckoutURL(string checkoutURL)
+        //{
+        //    //WebClient client = new WebClient();
+        //    //client.Headers[HttpRequestHeader.ContentType] = "application/x-www-form-urlencoded";
 
-            //string parameters = "productIDs=22403&productCounts=1&productIDs=12425&productCounts=1&productIDs=12425&productCounts=1";
-            //string url = "https://www.mathem.se/externalService.asmx/AddProductsToShoppingCart";
+        //    //string parameters = "productIDs=22403&productCounts=1&productIDs=12425&productCounts=1&productIDs=12425&productCounts=1";
+        //    //string url = "https://www.mathem.se/externalService.asmx/AddProductsToShoppingCart";
 
-            //var result = client.UploadString(url, parameters);
+        //    //var result = client.UploadString(url, parameters);
 
-            //client.Site.                
+        //    //client.Site.             
 
-            WebRequest webReq = WebRequest.Create(string.Format(checkoutURL));
-            webReq.Method = "GET";
-            WebResponse webResponse = webReq.GetResponse();
-
-        }
+        //    //WebRequest webReq = WebRequest.Create(string.Format(checkoutURL));
+        //    //webReq.Method = "GET";
+        //    //WebResponse webResponse = webReq.GetResponse();
+        //}
     }
 }

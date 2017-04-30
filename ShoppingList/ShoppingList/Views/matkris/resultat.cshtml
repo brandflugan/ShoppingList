@@ -54,7 +54,7 @@
                                                 <div class="row" style="max-height:450px">
                                                     @foreach (var product in supplier.Products)
                                                     {
-                                                        <ul class="list-group result-flex-container list-special @if (product.MatchType == ShoppingList.Models.MatchType.Match) {<text>item-matched</text>} else if (product.MatchType == ShoppingList.Models.MatchType.Replaced) {<text>item-replaced</text>} else {<text>item-unavailable</text>}">
+                                                        <ul class="list-group result-flex-container list-special @if (product.MatchType == Crawling.MatchType.Match) {<text>item-matched</text>} else if (product.MatchType == Crawling.MatchType.Replaced) {<text>item-replaced</text>} else {<text>item-unavailable</text>}">
                                                             <li class="list-group-item justify-content-between result-flex-item clearfix">
                                                                 <img class="product-image img-responsive" src="@product.BildURL">
                                                                 <div class="pull-right mobile-version">
@@ -75,9 +75,9 @@
                                                         </ul>
                                                         <div class="result-item-info">
                                                             <p class="result-item-info-text">
-                                                                @if (product.MatchType == ShoppingList.Models.MatchType.Match)
+                                                                @if (product.MatchType == Crawling.MatchType.Match)
                                                                 {<text>Varan matchades!</text>}
-                                                                else if (product.MatchType == ShoppingList.Models.MatchType.Replaced)
+                                                                else if (product.MatchType == Crawling.MatchType.Replaced)
                                                                 {<text>Varan ersätter @product.Replaced</text>}
                                                                 else
                                                                 {<text>Varan hittades inte</text>}
@@ -91,7 +91,6 @@
                                 </ul>
                             }
                         }
-
                     </div>
                 </div>
             </div>
@@ -99,3 +98,50 @@
     </div>
 
 </div>
+
+<script>
+    @*var suppliers = @Html.Raw(Json.Encode(Model))
+
+    function checkout(supplierName) {
+
+        var supplier = getSupplier(supplierName);
+        var checkoutURL;
+
+        switch (supplier.Name) {
+            case "mathem.se":
+                checkoutURL = GetMathemCheckoutURL(supplier);
+        }
+
+        alert(checkoutURL);
+
+        $.ajax({
+            url: checkoutURL,
+            type: "GET",
+            success: function (response) {
+                window.location.href = "https://www.mathem.se/kassan"
+            }
+        });
+    };
+
+    function getSupplier(supplierName) {
+        for (i = 0; i < suppliers.length; i++) {
+            if (suppliers[i].Name == supplierName) {
+                return suppliers[i];
+            }
+        }
+    }
+
+    function GetMathemCheckoutURL(supplier) {
+        var checkoutURL = "https://www.mathem.se/externalService.asmx/AddProductsToShoppingCart?"
+        var products = supplier.Products;
+
+        for (i = 0; i < products.length; i++) {
+            checkoutURL += "productIDs=" + products[i].Artikelnummer + "&productCounts=" + products[i].Antal;
+            if (i < (products.length - 1)) {
+                checkoutURL += "&";
+            }
+        }
+
+        return checkoutURL;
+    }*@
+</script>

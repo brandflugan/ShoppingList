@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace ShoppingList.Models
+namespace Crawling
 {
     public class Product
     {
@@ -15,8 +15,11 @@ namespace ShoppingList.Models
         public string Typ { get; set; }
         public string BildURL { get; set; }
         public MatchType MatchType { get; set; }
+        public int MatchScore { get; set; }
         public int Antal { get; set; } = 0;
         public string Replaced { get; set; }
+        public double Mangd { get; set; }
+        public string MangdUnit { get; set; }
     }
 
     public enum MatchType
