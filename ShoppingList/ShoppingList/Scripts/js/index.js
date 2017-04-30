@@ -61,8 +61,8 @@
     function productExists(artnummer) {
         var exist = false;
 
-        $("li ul").each(function () {
-            var id = this.id.substring(this.id.length - 4, this.id.length);
+        $("#checkout-list ul").each(function () {
+            var id = this.id.substring(20, this.id.length);
             if (artnummer == id) {
                 exist = true;
             }
@@ -73,7 +73,7 @@
     function addProductToCheckoutForm(product, index) {
         $("#checkout-form").append('<input class="hidden-product-index-' + index + '" name="products[' + index + '].Artikelnummer" value="' + product.Artikelnummer + '" type="hidden"/>');
         $("#checkout-form").append('<input class="hidden-product-index-' + index + '" name="products[' + index + '].Antal" value="' + product.Antal + '" type="hidden"/>');
-        $("#checkout-form").append('<input class="hidden-product-index-' + index + '" name="products[' + index + '].Typ" value="' + product.Typ +
+        $("#checkout-form").append('<input class="hidden-product-index-' + index + '" name="products[' + index + '].Kategori" value="' + product.Kategori +
             '" type="hidden"/>');
         $("#checkout-form").append('<input class="hidden-product-index-' + index + '" name="products[' + index + '].Produktnamn" value="' + product.Produktnamn +
            '" type="hidden"/>');
@@ -150,14 +150,14 @@
         $(".hidden-product-index-" + index).remove();
         $(this).closest("ul").remove();
         updateShoppingCart();
-        
+
     });
 
     $("#checkout-list").on('change', '.checkout-input', function (e) {
         var id = $(this).closest("ul").attr("id");
 
         var index = $("#checkout-product-id-" + (id.substring(id.length - 4, id.length)) + " button").attr("id");
-        index = index.charAt(index.length-1);
+        index = index.charAt(index.length - 1);
 
         var currentFormValue = parseInt($("#checkout-form [name='products[" + index + "].Antal']").val());
 

@@ -1,4 +1,5 @@
-﻿using ShoppingList.Models;
+﻿using Crawling;
+using ShoppingList.Models;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -21,8 +22,6 @@ namespace ShoppingList.Controllers
         // GET: Matkris
         public ActionResult index()
         {
-            // var result = dataAccess.GetQuantity(new Models.Product { Produktnamn = "Kycklingfärs Kronfågel, 500g" });
-
             return View();
         }
 
@@ -127,9 +126,10 @@ namespace ShoppingList.Controllers
                 if (errors.Count == 0)
                 {
                     var identity = (ClaimsIdentity)User.Identity;
-                    string businessemail = identity.Claims.Where(c => c.Type == ClaimTypes.Email).Select(c => c.Value).SingleOrDefault();
+                    string supplierEmail = identity.Claims.Where(c => c.Type == ClaimTypes.Email).Select(c => c.Value).SingleOrDefault();
 
-                    dataAccess.UpdateProductlist(lines, businessemail);
+                    var products = dataAccess.CreateProductlist(lines);
+                    dataAccess.SaveProducts(products, supplierEmail);
                 }
             }
             else

@@ -54,7 +54,7 @@
                                                 <div class="row" style="max-height:450px">
                                                     @foreach (var product in supplier.Products)
                                                     {
-                                                        <ul class="list-group result-flex-container list-special @if (product.MatchType == ShoppingList.Models.MatchType.Match) {<text>item-matched</text>} else if (product.MatchType == ShoppingList.Models.MatchType.Replaced) {<text>item-replaced</text>} else {<text>item-unavailable</text>}">
+                                                        <ul class="list-group result-flex-container list-special @if (product.MatchType == Crawling.MatchType.Match) {<text>item-matched</text>} else if (product.MatchType == Crawling.MatchType.Replaced) {<text>item-replaced</text>} else {<text>item-unavailable</text>}">
                                                             <li class="list-group-item justify-content-between result-flex-item clearfix">
                                                                 <img class="product-image img-responsive" src="@product.BildURL">
                                                                 <div class="pull-right mobile-version">
@@ -75,9 +75,9 @@
                                                         </ul>
                                                         <div class="result-item-info">
                                                             <p class="result-item-info-text">
-                                                                @if (product.MatchType == ShoppingList.Models.MatchType.Match)
+                                                                @if (product.MatchType == Crawling.MatchType.Match)
                                                                 {<text>Varan matchades!</text>}
-                                                                else if (product.MatchType == ShoppingList.Models.MatchType.Replaced)
+                                                                else if (product.MatchType == Crawling.MatchType.Replaced)
                                                                 {<text>Varan ersätter @product.Replaced</text>}
                                                                 else
                                                                 {<text>Varan hittades inte</text>}
@@ -91,7 +91,6 @@
                                 </ul>
                             }
                         }
-
                     </div>
                 </div>
             </div>
