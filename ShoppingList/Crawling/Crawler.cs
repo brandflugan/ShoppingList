@@ -31,7 +31,7 @@ namespace Crawling
 
             WebDriverWait wait = new WebDriverWait(driver, new TimeSpan(0, 0, 6));
 
-            for (int i = 0; i < 2; i++)
+            for (int i = 0; i < 10; i++)
             {
                 Thread.Sleep(2000);
                 jse.ExecuteScript("window.scrollBy(0,600);");
@@ -85,11 +85,22 @@ namespace Crawling
                 price = price.Insert(price.Length - 2, ",");
 
             price = price.Replace(" ", "");
-            price = price.Replace(",", ".");
 
-            prod.Pris = decimal.Parse(price);
+            try
+            {
+                prod.Pris = decimal.Parse(price);
+            } catch
+            {
+                prod.Pris = decimal.Parse(price.Replace(',', '.'));
+            }
 
-            prod.Jmf = decimal.Parse(details[3].Split(' ')[2].Replace(',', '.'));
+            try
+            {
+                prod.Jmf = decimal.Parse(details[3].Split(' ')[2]);
+            } catch
+            {
+                prod.Jmf = decimal.Parse(details[3].Split(' ')[2].Replace(',', '.'));
+            }
 
             prod.Produktnamn = details[1];
             prod.Produktnamn += " " + details[2];
@@ -135,31 +146,47 @@ namespace Crawling
 
             foreach (IWebElement div in productDivs)
             {
-                Product prod = new Product();
+                try
+                {
+                    Product prod = new Product();
 
-                var id = div.GetAttribute("data-product-div-id");
-                prod.Artikelnummer = int.Parse(id);
+                    var id = div.GetAttribute("data-product-div-id");
+                    prod.Artikelnummer = int.Parse(id);
 
-                var price = div.GetAttribute("data-price");
-                prod.Pris = decimal.Parse(price);
+                    var price = div.GetAttribute("data-price");
 
-                var productLink = div.FindElement(By.CssSelector("a.fancybox-product"));
+                    try
+                    {
+                        prod.Pris = decimal.Parse(price);
+                    } catch
+                    {
+                        prod.Pris = decimal.Parse(price.Replace('.', ','));
+                    }
 
-                var name = productLink.GetAttribute("title");
-                prod.Produktnamn = name;
+                    var productLink = div.FindElement(By.CssSelector("a.fancybox-product"));
 
-                var jmf = div.FindElement(By.CssSelector("span#spnPricePerUnit")).Text;
-                jmf = jmf.Replace("ca ", "");
-                jmf = jmf.Replace(",", ".");
+                    var name = productLink.GetAttribute("title");
+                    prod.Produktnamn = name;
 
-                prod.Jmf = decimal.Parse(jmf.Split(' ')[0]);
+                    var jmf = div.FindElement(By.CssSelector("span#spnPricePerUnit")).Text;
+                    jmf = jmf.Replace("ca ", "");
 
-                var img = div.FindElement(By.CssSelector(".lazy"));
-                prod.BildURL = img.GetAttribute("src");
+                    try
+                    {
+                        prod.Jmf = decimal.Parse(jmf.Split(' ')[0]);
 
-                prod.Kategori = category;
+                    } catch
+                    {
+                        prod.Jmf = decimal.Parse((jmf.Split(' ')[0]).Replace('.', ','));
+                    }
 
-                products.Add(prod);
+                    var img = div.FindElement(By.CssSelector(".lazy"));
+                    prod.BildURL = img.GetAttribute("src");
+
+                    prod.Kategori = category;
+
+                    products.Add(prod);
+                } catch { }
             }
 
             driver.Quit();

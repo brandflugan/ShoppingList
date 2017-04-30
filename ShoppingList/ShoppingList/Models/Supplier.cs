@@ -38,7 +38,7 @@ namespace ShoppingList.Models
         {
             string checkoutURL = string.Empty;
 
-            switch (Name)
+            switch (Name.ToLower())
             {
                 case "mathem.se":
                     checkoutURL = GetMathemCheckoutURL();
