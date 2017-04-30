@@ -31,7 +31,7 @@ namespace Crawling
 
             WebDriverWait wait = new WebDriverWait(driver, new TimeSpan(0, 0, 6));
 
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < 2; i++)
             {
                 Thread.Sleep(2000);
                 jse.ExecuteScript("window.scrollBy(0,600);");
@@ -50,7 +50,11 @@ namespace Crawling
 
             foreach (IWebElement li in productDivs)
             {
-                products.Add(SetProductDetails(li, category));
+                try
+                {
+                    products.Add(SetProductDetails(li, category));
+                }
+                catch { }
             }
 
             driver.Quit();
@@ -80,13 +84,10 @@ namespace Crawling
             else
                 price = price.Insert(price.Length - 2, ",");
 
+            price = price.Replace(" ", "");
             prod.Pris = decimal.Parse(price);
 
-            try
-            {
-                prod.Jmf = decimal.Parse(details[3].Split(' ')[2]);
-            }
-            catch { }
+            prod.Jmf = decimal.Parse(details[3].Split(' ')[2].Replace(',', '.'));
 
             prod.Produktnamn = details[1];
             prod.Produktnamn += " " + details[2];
