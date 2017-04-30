@@ -234,7 +234,6 @@ namespace ShoppingList.Controllers
             webReq.Method = "GET";
             WebResponse webResponse = webReq.GetResponse();
 
-            string nu = "nu";
         }
     }
 }
