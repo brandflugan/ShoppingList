@@ -156,7 +156,7 @@
     $("#checkout-list").on('change', '.checkout-input', function (e) {
         var id = $(this).closest("ul").attr("id");
 
-        var index = $("#checkout-product-id-" + (id.substring(id.length - 4, id.length)) + " button").attr("id");
+        var index = $("#checkout-product-id-" + (id.substring(20, id.length)) + " button").attr("id");
         index = index.charAt(index.length - 1);
 
         var currentFormValue = parseInt($("#checkout-form [name='products[" + index + "].Antal']").val());
@@ -169,7 +169,7 @@
     function updateShoppingCart(event) {
         var countProducts = 0;
         $("#checkout-list ul").each(function () {
-            var id = this.id.substring(this.id.length - 4, this.id.length);
+            var id = this.id.substring(20, this.id.length);
             var inputValue = parseInt($(this).find("input").val());
             countProducts += inputValue;
         });
